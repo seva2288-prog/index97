@@ -5300,12 +5300,14 @@ const MAX_CONCURRENT = CONFIG.API.MAX_CONCURRENT || 5;
 
 /**
  * API запрос с кэшированием и повторными попытками
- */
+
+
 async function fetchWithCache(url, options = {}, ttl = CONFIG.CACHE.API_TTL) {
     const key = url + JSON.stringify(options);
     
     // Проверяем кэш в памяти
     if (API_CACHE[key] && Date.now() - API_CACHE[key].time < ttl) {
+        console.log('📦 Кэш:', url);
         return API_CACHE[key].data;
     }
 
@@ -5317,6 +5319,7 @@ async function fetchWithCache(url, options = {}, ttl = CONFIG.CACHE.API_TTL) {
             const data = JSON.parse(stored);
             if (Date.now() - data.timestamp < ttl) {
                 API_CACHE[key] = { data: data.response, time: data.timestamp };
+                console.log('📦 Кэш (localStorage):', url);
                 return data.response;
             }
         } catch (e) {}
@@ -5324,36 +5327,38 @@ async function fetchWithCache(url, options = {}, ttl = CONFIG.CACHE.API_TTL) {
 
     // Выполняем запрос с повторными попытками
     let attempts = 0;
-    const maxAttempts = CONFIG.API.RETRY_COUNT || 3;
-    const delayMs = CONFIG.API.RETRY_DELAY || 1000;
+    const maxAttempts = 3;
+    const delayMs = 1000;
 
     while (attempts < maxAttempts) {
         try {
-            // Ожидаем освобождения очереди
-            await waitForRequestSlot();
-
             const apiKey = localStorage.getItem('quantum_api_key');
             if (!apiKey || apiKey === '') {
-                throw new Error('API ключ не установлен');
+                console.log('⚠️ Нет API ключа');
+                return null;
             }
 
             const fullUrl = url.startsWith('http') ? url : CONFIG.API.BASE_URL + url;
-            
+            console.log(`📡 Запрос (${attempts + 1}/${maxAttempts}):`, fullUrl);
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 15000);
+
             const response = await fetch(fullUrl, {
                 ...options,
                 headers: {
                     ...options.headers,
                     'x-apisports-key': apiKey
                 },
-                signal: AbortSignal.timeout(CONFIG.API.TIMEOUT || 30000)
+                signal: controller.signal
             });
 
-            // Проверяем статус
+            clearTimeout(timeoutId);
+
             if (!response.ok) {
                 if (response.status === 429) {
-                    // Превышен лимит запросов
                     const retryAfter = parseInt(response.headers.get('Retry-After')) || 5;
-                    console.log(`⚠️ Превышен лимит запросов. Ждем ${retryAfter} сек...`);
+                    console.log(`⚠️ Лимит запросов. Ждем ${retryAfter}с...`);
                     await delay(retryAfter * 1000);
                     attempts++;
                     continue;
@@ -5363,7 +5368,6 @@ async function fetchWithCache(url, options = {}, ttl = CONFIG.CACHE.API_TTL) {
 
             const data = await response.json();
 
-            // Проверяем ошибки в ответе
             if (data.errors && Object.keys(data.errors).length > 0) {
                 const errorMsg = Object.values(data.errors)[0];
                 throw new Error(errorMsg);
@@ -5378,19 +5382,19 @@ async function fetchWithCache(url, options = {}, ttl = CONFIG.CACHE.API_TTL) {
                 }));
             } catch (e) {}
 
+            console.log('✅ Успешно:', url);
             return data;
 
         } catch (error) {
             attempts++;
-            console.error(`❌ API запрос (попытка ${attempts}/${maxAttempts}):`, error);
+            console.error(`❌ Попытка ${attempts}/${maxAttempts} ошибка:`, error.message);
             
             if (attempts >= maxAttempts) {
-                // Возвращаем кэшированные данные если есть
                 if (API_CACHE[key]) {
                     console.log('📦 Возвращены кэшированные данные');
                     return API_CACHE[key].data;
                 }
-                throw error;
+                return null;
             }
 
             await delay(delayMs * attempts);
