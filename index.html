@@ -4776,8 +4776,120 @@ function roundTo(value, decimals = 2) {
 }
 
 // ================================================================
-// 2. ПОГОДНЫЕ ФУНКЦИИ
 // ================================================================
+// ПОГОДНЫЕ ФУНКЦИИ - ИСПРАВЛЕННАЯ ВЕРСИЯ
+// ================================================================
+
+// ===== КОНСТАНТЫ ДЛЯ ПОГОДЫ =====
+const WEATHER_EMOJIS = {
+    'clear': '☀️',
+    'clouds': '☁️',
+    'rain': '🌧️',
+    'snow': '❄️',
+    'thunderstorm': '⛈️',
+    'mist': '🌫️',
+    'fog': '🌫️',
+    'smoke': '🌫️',
+    'haze': '🌫️',
+    'dust': '💨',
+    'sand': '💨',
+    'ash': '💨',
+    'squall': '💨',
+    'tornado': '🌪️',
+    'drizzle': '🌦️',
+    'extreme': '🌊'
+};
+
+// ===== КООРДИНАТЫ СТАДИОНОВ =====
+const STADIUM_COORDS = {
+    // Англия
+    'Manchester United': { lat: 53.4631, lon: -2.2913 },
+    'Manchester City': { lat: 53.4831, lon: -2.2004 },
+    'Liverpool': { lat: 53.4308, lon: -2.9608 },
+    'Everton': { lat: 53.4388, lon: -2.9663 },
+    'Arsenal': { lat: 51.5550, lon: -0.1084 },
+    'Chelsea': { lat: 51.4816, lon: -0.1910 },
+    'Tottenham': { lat: 51.6032, lon: -0.0655 },
+    'West Ham': { lat: 51.5387, lon: -0.0166 },
+    'Newcastle': { lat: 54.9756, lon: -1.6217 },
+    // Испания
+    'Real Madrid': { lat: 40.4531, lon: -3.6883 },
+    'Barcelona': { lat: 41.3809, lon: 2.1228 },
+    'Atletico Madrid': { lat: 40.4363, lon: -3.5997 },
+    'Sevilla': { lat: 37.3839, lon: -5.9706 },
+    'Real Betis': { lat: 37.3565, lon: -5.9813 },
+    // Италия
+    'Juventus': { lat: 45.1096, lon: 7.6413 },
+    'AC Milan': { lat: 45.4781, lon: 9.1240 },
+    'Inter Milan': { lat: 45.4781, lon: 9.1240 },
+    'Roma': { lat: 41.8270, lon: 12.4728 },
+    'Lazio': { lat: 41.8270, lon: 12.4728 },
+    // Германия
+    'Bayern Munich': { lat: 48.2188, lon: 11.6247 },
+    'Borussia Dortmund': { lat: 51.4926, lon: 7.4519 },
+    'Schalke 04': { lat: 51.5541, lon: 7.0687 },
+    // Франция
+    'Paris Saint-Germain': { lat: 48.8414, lon: 2.2530 },
+    'Marseille': { lat: 43.2698, lon: 5.3959 },
+    'Lyon': { lat: 45.7651, lon: 4.9822 },
+    // Нидерланды
+    'Ajax': { lat: 52.3143, lon: 4.9421 },
+    'Feyenoord': { lat: 51.8939, lon: 4.5236 },
+    'PSV Eindhoven': { lat: 51.4416, lon: 5.4675 },
+    // Бельгия
+    'Anderlecht': { lat: 50.8342, lon: 4.2984 },
+    'Club Brugge': { lat: 51.1933, lon: 3.1808 },
+    'Standard Liege': { lat: 50.6103, lon: 5.5431 },
+    // Россия
+    'Spartak Moscow': { lat: 55.8170, lon: 37.4360 },
+    'CSKA Moscow': { lat: 55.7920, lon: 37.5160 },
+    'Zenit': { lat: 59.9530, lon: 30.2200 },
+    'Dinamo Moscow': { lat: 55.7880, lon: 37.5580 },
+    'Lokomotiv Moscow': { lat: 55.8100, lon: 37.7400 },
+    // Другие
+    'Celtic': { lat: 55.8497, lon: -4.2056 },
+    'Rangers': { lat: 55.8531, lon: -4.3090 },
+    'Benfica': { lat: 38.7527, lon: -9.1848 },
+    'Porto': { lat: 41.1618, lon: -8.5831 },
+    'Sporting': { lat: 38.7612, lon: -9.1605 },
+    'Galatasaray': { lat: 41.0393, lon: 28.9947 },
+    'Fenerbahce': { lat: 40.9946, lon: 29.0052 },
+    'Besiktas': { lat: 41.0391, lon: 29.0040 },
+    // Стандартные города
+    'London': { lat: 51.5074, lon: -0.1278 },
+    'Paris': { lat: 48.8566, lon: 2.3522 },
+    'Berlin': { lat: 52.5200, lon: 13.4050 },
+    'Rome': { lat: 41.9028, lon: 12.4964 },
+    'Madrid': { lat: 40.4168, lon: -3.7038 },
+    'Amsterdam': { lat: 52.3676, lon: 4.9041 },
+    'Brussels': { lat: 50.8503, lon: 4.3517 },
+    'Moscow': { lat: 55.7558, lon: 37.6173 },
+    'Istanbul': { lat: 41.0082, lon: 28.9784 }
+};
+
+// ===== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ =====
+
+/**
+ * Получение координат стадиона по названию команды
+ */
+function getStadiumCoords(teamName) {
+    if (!teamName) return null;
+    
+    // Точное совпадение
+    if (STADIUM_COORDS[teamName]) {
+        return STADIUM_COORDS[teamName];
+    }
+    
+    // Частичное совпадение
+    const teamLower = teamName.toLowerCase();
+    for (const [key, coords] of Object.entries(STADIUM_COORDS)) {
+        if (teamLower.includes(key.toLowerCase()) || key.toLowerCase().includes(teamLower)) {
+            return coords;
+        }
+    }
+    
+    return null;
+}
 
 /**
  * Получение эмодзи для погоды
@@ -4794,24 +4906,15 @@ function getWeatherEmoji(condition) {
 function getWeatherIcon(iconCode) {
     if (!iconCode) return '🌤️';
     const mapping = {
-        '01d': '☀️',
-        '01n': '🌙',
-        '02d': '⛅',
-        '02n': '☁️',
-        '03d': '☁️',
-        '03n': '☁️',
-        '04d': '☁️',
-        '04n': '☁️',
-        '09d': '🌧️',
-        '09n': '🌧️',
-        '10d': '🌦️',
-        '10n': '🌧️',
-        '11d': '⛈️',
-        '11n': '⛈️',
-        '13d': '❄️',
-        '13n': '❄️',
-        '50d': '🌫️',
-        '50n': '🌫️',
+        '01d': '☀️', '01n': '🌙',
+        '02d': '⛅', '02n': '☁️',
+        '03d': '☁️', '03n': '☁️',
+        '04d': '☁️', '04n': '☁️',
+        '09d': '🌧️', '09n': '🌧️',
+        '10d': '🌦️', '10n': '🌧️',
+        '11d': '⛈️', '11n': '⛈️',
+        '13d': '❄️', '13n': '❄️',
+        '50d': '🌫️', '50n': '🌫️'
     };
     return mapping[iconCode] || '🌤️';
 }
@@ -4834,9 +4937,6 @@ function getWeatherImpact(weather) {
     const condition = weather.condition || weather.weather || '';
     const temp = weather.temp || 0;
     const wind = weather.wind_speed || 0;
-    const humidity = weather.humidity || 0;
-    const pressure = weather.pressure || 1013;
-    const visibility = weather.visibility || 10000;
 
     let goals = 0;
     let oz = 0;
@@ -4847,77 +4947,41 @@ function getWeatherImpact(weather) {
 
     // Проверка на осадки
     if (condition.includes('rain') || condition.includes('drizzle')) {
-        goals = -15;
-        oz = -10;
-        confidence = -10;
-        factor = 0.85;
+        goals = -15; oz = -10; confidence = -10; factor = 0.85;
         text = '🌧️ Дождь снижает результативность (-15% голов)';
         emoji = '🌧️';
     } else if (condition.includes('snow')) {
-        goals = -25;
-        oz = -20;
-        confidence = -20;
-        factor = 0.75;
+        goals = -25; oz = -20; confidence = -20; factor = 0.75;
         text = '❄️ Снег сильно снижает результативность (-25% голов)';
         emoji = '❄️';
     } else if (condition.includes('thunderstorm')) {
-        goals = -30;
-        oz = -25;
-        confidence = -25;
-        factor = 0.70;
+        goals = -30; oz = -25; confidence = -25; factor = 0.70;
         text = '⛈️ Гроза! Очень низкая результативность (-30% голов)';
         emoji = '⛈️';
-    } 
-    // Проверка температуры
-    else if (temp > 30) {
-        goals = -20;
-        oz = -10;
-        confidence = -15;
-        factor = 0.80;
+    } else if (temp > 30) {
+        goals = -20; oz = -10; confidence = -15; factor = 0.80;
         text = '🌡️ Жара (>30°C) снижает темп игры (-20% голов во 2-м тайме)';
         emoji = '🥵';
     } else if (temp < 0) {
-        goals = -10;
-        oz = -5;
-        confidence = -10;
-        factor = 0.90;
+        goals = -10; oz = -5; confidence = -10; factor = 0.90;
         text = '🥶 Холод (<0°C) влияет на качество игры (-10% голов)';
         emoji = '🥶';
-    } 
-    // Проверка ветра
-    else if (wind > 20) {
-        goals = -10;
-        oz = -5;
-        confidence = -5;
-        factor = 0.90;
+    } else if (wind > 20) {
+        goals = -10; oz = -5; confidence = -5; factor = 0.90;
         text = '💨 Сильный ветер (>20 км/ч) снижает точность (-10% голов)';
         emoji = '💨';
-    } 
-    // Идеальные условия
-    else if ((condition.includes('clear') || condition.includes('sun')) && temp >= 15 && temp <= 25) {
-        goals = 5;
-        oz = 3;
-        confidence = 5;
-        factor = 1.05;
+    } else if ((condition.includes('clear') || condition.includes('sun')) && temp >= 15 && temp <= 25) {
+        goals = 5; oz = 3; confidence = 5; factor = 1.05;
         text = '☀️ Отличная погода для футбола (+5% голов)';
         emoji = '☀️';
-    } 
-    // Облачно - нейтрально
-    else if (condition.includes('cloud')) {
+    } else if (condition.includes('cloud')) {
         text = '☁️ Облачно, условия нормальные';
         emoji = '☁️';
-    } 
-    // Туман
-    else if (condition.includes('fog') || condition.includes('mist')) {
-        goals = -5;
-        oz = -3;
-        confidence = -5;
-        factor = 0.95;
+    } else if (condition.includes('fog') || condition.includes('mist')) {
+        goals = -5; oz = -3; confidence = -5; factor = 0.95;
         text = '🌫️ Туман снижает видимость (-5% голов)';
         emoji = '🌫️';
-    }
-    // Ясно - хорошо
-    else if (condition.includes('clear')) {
+    } else if (condition.includes('clear')) {
         text = '☀️ Ясно, условия нормальные';
         emoji = '☀️';
     }
@@ -4940,7 +5004,9 @@ async function getWeatherByCoords(lat, lon) {
     if (cached) {
         try {
             const data = JSON.parse(cached);
-            if (Date.now() - data.timestamp < CONFIG.CACHE.WEATHER_TTL) {
+            // Используем 2 часа вместо CONFIG (если CONFIG не определен)
+            const ttl = 2 * 60 * 60 * 1000;
+            if (Date.now() - data.timestamp < ttl) {
                 return data.weather;
             }
         } catch (e) {}
@@ -4967,9 +5033,7 @@ async function getWeatherByCoords(lat, lon) {
             description: data.weather[0].description,
             icon: data.weather[0].icon,
             city: data.name,
-            country: data.sys.country,
-            sunrise: new Date(data.sys.sunrise * 1000).toLocaleTimeString(),
-            sunset: new Date(data.sys.sunset * 1000).toLocaleTimeString(),
+            country: data.sys.country
         };
 
         // Сохраняем в кэш
@@ -5001,7 +5065,8 @@ async function getWeatherByCity(city) {
     if (cached) {
         try {
             const data = JSON.parse(cached);
-            if (Date.now() - data.timestamp < CONFIG.CACHE.WEATHER_TTL) {
+            const ttl = 2 * 60 * 60 * 1000;
+            if (Date.now() - data.timestamp < ttl) {
                 return data.weather;
             }
         } catch (e) {}
@@ -5028,9 +5093,7 @@ async function getWeatherByCity(city) {
             description: data.weather[0].description,
             icon: data.weather[0].icon,
             city: data.name,
-            country: data.sys.country,
-            sunrise: new Date(data.sys.sunrise * 1000).toLocaleTimeString(),
-            sunset: new Date(data.sys.sunset * 1000).toLocaleTimeString(),
+            country: data.sys.country
         };
 
         localStorage.setItem(cacheKey, JSON.stringify({
@@ -5056,6 +5119,174 @@ async function getStadiumWeather(teamName) {
         return null;
     }
     return await getWeatherByCoords(coords.lat, coords.lon);
+}
+
+/**
+ * ГЛАВНАЯ ФУНКЦИЯ ЗАГРУЗКИ ПОГОДЫ В ШАПКУ
+ */
+async function loadHeaderWeather() {
+    const iconEl = document.getElementById('weatherIconHeader');
+    const tempEl = document.getElementById('weatherTempHeader');
+    const descEl = document.getElementById('weatherDescHeader');
+    
+    if (!iconEl) {
+        console.warn('⚠️ Элементы погоды не найдены');
+        return;
+    }
+
+    const key = localStorage.getItem('quantum_weather_key');
+    if (!key || key === '') {
+        iconEl.textContent = '❌';
+        tempEl.textContent = '--°C';
+        descEl.textContent = 'Нет ключа';
+        return;
+    }
+
+    iconEl.textContent = '⏳';
+    tempEl.textContent = '--°C';
+    descEl.textContent = 'Загрузка...';
+
+    try {
+        const lat = 55.7558;
+        const lon = 37.6173;
+        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${key}`;
+        
+        console.log('🌤️ Запрос погоды...');
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            if (response.status === 401) throw new Error('Неверный ключ API');
+            if (response.status === 429) throw new Error('Превышен лимит запросов');
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('✅ Погода получена:', data.weather[0].description);
+
+        state.headerWeather = {
+            temp: Math.round(data.main.temp),
+            feels_like: Math.round(data.main.feels_like),
+            humidity: data.main.humidity,
+            wind_speed: Math.round(data.wind.speed),
+            weather: data.weather[0].main,
+            condition: data.weather[0].main,
+            description: data.weather[0].description,
+            icon: data.weather[0].icon,
+            city: data.name,
+            country: data.sys.country
+        };
+        state.headerWeatherTimestamp = Date.now();
+
+        iconEl.textContent = getWeatherEmoji(data.weather[0].main);
+        tempEl.textContent = Math.round(data.main.temp) + '°C';
+        descEl.textContent = data.weather[0].description;
+
+        // Обновляем карточку погоды если она есть
+        updateWeatherCard();
+
+    } catch (error) {
+        console.error('❌ Ошибка погоды:', error);
+        iconEl.textContent = '❌';
+        tempEl.textContent = '--°C';
+        descEl.textContent = 'Ошибка';
+    }
+}
+
+/**
+ * ОБНОВЛЕНИЕ КАРТОЧКИ ПОГОДЫ
+ */
+function updateWeatherCard() {
+    const container = document.getElementById('weatherCardContent');
+    if (!container) return;
+
+    if (!state.headerWeather) {
+        container.innerHTML = '<div class="weather-loading-text">⏳ Загрузка погоды...</div>';
+        return;
+    }
+
+    const w = state.headerWeather;
+    const emoji = getWeatherEmoji(w.weather);
+    const impact = getWeatherImpact(w);
+    
+    container.innerHTML = `
+        <div class="weather-main">
+            <span class="big-icon">${emoji}</span>
+            <div>
+                <div class="temp-big">${w.temp}°C</div>
+                <div class="desc-big">${w.description}</div>
+            </div>
+        </div>
+        <div class="weather-details">
+            <span>💨 ${w.wind_speed} км/ч</span>
+            <span>💧 ${w.humidity}%</span>
+            <span>🌡️ Ощущается ${w.feels_like}°C</span>
+        </div>
+        <div class="weather-city">📍 ${w.city}, ${w.country}</div>
+        <div class="weather-impact">📊 ${impact.text}</div>
+    `;
+}
+
+/**
+ * ПОГОДА ПО ГОРОДУ (ручной ввод)
+ */
+async function loadWeatherByCity() {
+    const cityInput = document.getElementById('cityWeatherInput');
+    const city = cityInput.value.trim();
+    
+    if (!city) {
+        showToast('⚠️ Введите город', 'error');
+        return;
+    }
+
+    const key = localStorage.getItem('quantum_weather_key');
+    if (!key) {
+        showToast('⚠️ Введите ключ погоды в настройках', 'error');
+        return;
+    }
+
+    try {
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&appid=${key}`;
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            if (response.status === 404) throw new Error('Город не найден');
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        
+        state.headerWeather = {
+            temp: Math.round(data.main.temp),
+            feels_like: Math.round(data.main.feels_like),
+            humidity: data.main.humidity,
+            wind_speed: Math.round(data.wind.speed),
+            weather: data.weather[0].main,
+            condition: data.weather[0].main,
+            description: data.weather[0].description,
+            icon: data.weather[0].icon,
+            city: data.name,
+            country: data.sys.country
+        };
+        state.headerWeatherTimestamp = Date.now();
+
+        document.getElementById('weatherIconHeader').textContent = getWeatherEmoji(data.weather[0].main);
+        document.getElementById('weatherTempHeader').textContent = Math.round(data.main.temp) + '°C';
+        document.getElementById('weatherDescHeader').textContent = data.weather[0].description;
+        
+        updateWeatherCard();
+        showToast(`✅ Погода в ${data.name}, ${data.sys.country}`, 'success');
+
+    } catch (error) {
+        showToast('❌ Город "' + city + '" не найден', 'error');
+    }
+}
+
+/**
+ * ОБНОВЛЕНИЕ ПОГОДЫ (кнопка)
+ */
+function refreshWeather() {
+    showToast('🔄 Обновление погоды...', 'info');
+    loadHeaderWeather();
 }
 
 // ================================================================
