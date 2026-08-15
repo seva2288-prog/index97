@@ -3183,7 +3183,7 @@ const CONFIG = {
     NAME: APP_NAME,
     AUTHOR: APP_AUTHOR,
     CURRENT_SEASON: 2026,
-    
+
     API: {
         BASE_URL: 'https://v3.football.api-sports.io/',
         TIMEOUT: 30000,
@@ -3191,7 +3191,7 @@ const CONFIG = {
         RETRY_DELAY: 1000,
         MAX_CONCURRENT: 5,
     },
-    
+
     CACHE: {
         H2H_TTL: 7 * 24 * 60 * 60 * 1000,
         LEAGUES_TTL: 24 * 60 * 60 * 1000,
@@ -3201,7 +3201,7 @@ const CONFIG = {
         UPDATE_INTERVAL: 30 * 60 * 1000,
         MAX_CACHE_ITEMS: 100,
     },
-    
+
     SCANNER: {
         MAX_MATCHES: 100,
         TOP_RESULTS: 10,
@@ -3213,7 +3213,7 @@ const CONFIG = {
         LEAGUES_TO_SCAN: 41,
         UPDATE_INTERVAL: 60 * 60 * 1000,
     },
-    
+
     WEATHER: {
         UPDATE_INTERVAL: 30 * 60 * 1000,
         FORECAST_DAYS: 5,
@@ -3233,10 +3233,10 @@ const CONFIG = {
             HOT: 30,
             COLD: 0,
             PERFECT_MIN: 15,
-            PERFECT_MAX: 25,
+            PERFECT_MAX: 25,   // ← ИСПРАВЛЕНО!
         },
     },
-    
+
     UI: {
         ANIMATION_DURATION: 300,
         TOAST_DURATION: 3000,
@@ -3247,7 +3247,7 @@ const CONFIG = {
         DEBOUNCE_DELAY: 300,
         THROTTLE_DELAY: 500,
     },
-    
+
     SYSTEM: {
         MAX_RETRIES: 3,
         DEBOUNCE_DELAY: 300,
@@ -3258,7 +3258,7 @@ const CONFIG = {
         ENABLE_ANALYTICS: false,
         ENABLE_ERROR_REPORTING: true,
     },
-    
+
     PREDICTIONS: {
         MIN_CONFIDENCE: 50,
         MAX_CONFIDENCE: 95,
@@ -3271,7 +3271,7 @@ const CONFIG = {
         H2H_WEIGHT: 0.2,
         MOTIVATION_WEIGHT: 0.1,
     },
-    
+
     HISTORY: {
         MAX_ITEMS: 1000,
         EXPORT_FORMATS: ['json', 'csv', 'xlsx'],
