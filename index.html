@@ -2624,7 +2624,7 @@ async function generateUltimatePredictionExtended() {
 }
     </script>
 // ================================================================
-// ТУРБО-АНАЛИЗ (УПРОЩЕННАЯ ВЕРСИЯ ДЛЯ ТЕСТА)
+// ТУРБО-АНАЛИЗ (УПРОЩЕННАЯ ТЕСТОВАЯ ВЕРСИЯ)
 // ================================================================
 
 async function turboAnalyze(matchId) {
@@ -2661,58 +2661,97 @@ async function turboAnalyze(matchId) {
             btn.innerHTML = '⏳ Анализ...';
         }
         
-        // 5. Имитируем прогресс
+        // 5. Находим элементы прогресса
         const progressContainer = card.querySelector('.turbo-progress-container');
         const progressFill = card.querySelector('.turbo-progress-fill');
         const progressStep = card.querySelector('.turbo-step');
         const progressPercent = card.querySelector('.turbo-percent');
         
+        // 6. Активируем прогресс-бар
         if (progressContainer) {
             progressContainer.classList.add('active');
         }
         
-        // 6. Имитируем шаги
-        const steps = ['Загрузка H2H', 'Анализ формы', 'Мотивация', 'Погода', 'xG', 'Детектив', 'Value', 'Итог'];
+        // 7. Шаги для теста
+        const steps = [
+            'Загрузка H2H',
+            'Анализ формы (10 матчей)',
+            'Турнирная таблица',
+            'Погода на стадионе',
+            'Прогноз xG',
+            'Детектив-анализ',
+            'Value Betting',
+            'Итоговый прогноз'
+        ];
         
+        // 8. Выполняем шаги с задержкой
         for (let i = 0; i < steps.length; i++) {
-            const pct = Math.round(((i + 1) / steps.length) * 100);
-            if (progressFill) progressFill.style.width = pct + '%';
-            if (progressStep) progressStep.textContent = 'Шаг ' + (i + 1) + '/' + steps.length + ': ' + steps[i];
-            if (progressPercent) progressPercent.textContent = pct + '%';
-            await delay(300);
-            console.log('✅ Шаг ' + (i + 1) + ': ' + steps[i]);
+            const stepNumber = i + 1;
+            const pct = Math.round((stepNumber / steps.length) * 100);
+            
+            console.log('✅ Шаг ' + stepNumber + '/' + steps.length + ': ' + steps[i]);
+            
+            if (progressFill) {
+                progressFill.style.width = pct + '%';
+            }
+            if (progressStep) {
+                progressStep.textContent = 'Шаг ' + stepNumber + '/' + steps.length + ': ' + steps[i];
+            }
+            if (progressPercent) {
+                progressPercent.textContent = pct + '%';
+            }
+            
+            // Ждём 500 мс между шагами
+            await new Promise(resolve => setTimeout(resolve, 500));
         }
         
-        // 7. Показываем результат
+        // 9. Показываем результат
         const turboResult = card.querySelector('.turbo-result');
         if (turboResult) {
             turboResult.classList.add('active');
             turboResult.innerHTML = `
-                <div class="row"><span class="label">🎯 Прогноз:</span><span class="value good">✅ ТЕСТ РАБОТАЕТ!</span></div>
-                <div class="row"><span class="label">📊 Оценка:</span><span class="value good">85%</span></div>
-                <div class="row"><span class="label">💰 Value:</span><span class="value good">+15%</span></div>
-                <div style="border-top:1px solid #2a3140;padding-top:4px;margin-top:4px;color:#2ecc71;font-weight:700;">
+                <div class="row">
+                    <span class="label">🎯 Прогноз:</span>
+                    <span class="value good">✅ ТЕСТ РАБОТАЕТ!</span>
+                </div>
+                <div class="row">
+                    <span class="label">📊 Оценка:</span>
+                    <span class="value good">85%</span>
+                </div>
+                <div class="row">
+                    <span class="label">💰 Value:</span>
+                    <span class="value good">+15.2%</span>
+                </div>
+                <div class="row">
+                    <span class="label">🏆 Мотивация:</span>
+                    <span class="value">🔥 Высокая</span>
+                </div>
+                <div style="border-top:1px solid #2a3140;padding-top:8px;margin-top:6px;text-align:center;color:#2ecc71;font-weight:700;font-size:14px;">
                     ✅ ТУРБО-АНАЛИЗ РАБОТАЕТ!
+                </div>
+                <div style="font-size:10px;color:#555;text-align:center;margin-top:4px;">
+                    Матч: ${match.home} vs ${match.away}
                 </div>
             `;
         }
         
-        // 8. Разблокируем кнопку
+        // 10. Разблокируем кнопку
         if (btn) {
             btn.disabled = false;
             btn.innerHTML = '🔥 Турбо-анализ v7.1';
         }
         
+        // 11. Скрываем прогресс через 2 секунды
         if (progressContainer) {
             setTimeout(() => {
                 progressContainer.classList.remove('active');
-            }, 1000);
+            }, 2000);
         }
         
-        showToast('✅ Турбо-анализ завершён! (тест)', 'success');
+        showToast('✅ Турбо-анализ (тест) завершён!', 'success');
         
     } catch (error) {
-        console.error('❌ Ошибка:', error);
+        console.error('❌ Ошибка в Турбо-анализе:', error);
         showToast('❌ Ошибка: ' + error.message, 'error');
         
         // Разблокируем кнопку в случае ошибки
@@ -2730,7 +2769,6 @@ async function turboAnalyze(matchId) {
         }
     }
 }
-
 // ================================================================
 // VALUE СКАНЕР
 // ================================================================
