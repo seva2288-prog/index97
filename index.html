@@ -5300,7 +5300,7 @@ const MAX_CONCURRENT = CONFIG.API.MAX_CONCURRENT || 5;
 
 /**
  * API запрос с кэшированием и повторными попытками
-
+ */
 
 async function fetchWithCache(url, options = {}, ttl = CONFIG.CACHE.API_TTL) {
     const key = url + JSON.stringify(options);
