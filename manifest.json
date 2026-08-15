@@ -1,0 +1,29 @@
+{
+  "name": "Квантум v7.1",
+  "short_name": "Квантум",
+  "description": "Аналитический инструмент для прогнозирования футбольных матчей",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0e14",
+  "theme_color": "#0b0e14",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%230b0e14'/%3E%3Ctext x='50' y='72' font-size='60' text-anchor='middle' font-family='Arial' fill='%23f7931a'%3E%E2%9A%9B%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Ccircle cx='96' cy='96' r='86' fill='%230b0e14'/%3E%3Ctext x='96' y='134' font-size='110' text-anchor='middle' font-family='Arial' fill='%23f7931a'%3E%E2%9A%9B%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "categories": ["sports", "entertainment"],
+  "lang": "ru",
+  "dir": "ltr",
+  "prefer_related_applications": false
+}
