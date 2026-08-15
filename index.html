@@ -2624,572 +2624,111 @@ async function generateUltimatePredictionExtended() {
 }
     </script>
 // ================================================================
-// ТУРБО-АНАЛИЗ (ПОЛНАЯ РАБОЧАЯ ВЕРСИЯ)
+// ТУРБО-АНАЛИЗ (УПРОЩЕННАЯ ВЕРСИЯ ДЛЯ ТЕСТА)
 // ================================================================
 
 async function turboAnalyze(matchId) {
-    // Проверка: не запущен ли уже анализ
-    if (state.isTurboRunning) {
-        showToast('⏳ Уже выполняется анализ', 'info');
-        return;
-    }
-
-    // Находим матч по ID
-    const match = state.predictions.find(m => m.id === matchId);
-    if (!match) {
-        showToast('❌ Матч не найден', 'error');
-        return;
-    }
-
-    // Блокируем интерфейс
-    state.isTurboRunning = true;
+    console.log('🔍 ТУРБО-АНАЛИЗ ЗАПУЩЕН для матча:', matchId);
     
-    // Находим элементы карточки
-    const card = document.querySelector('.prediction-card[data-match-id="' + matchId + '"]');
-    if (!card) {
-        showToast('❌ Карточка матча не найдена', 'error');
-        state.isTurboRunning = false;
-        return;
-    }
-    
-    const btn = card.querySelector('.btn-turbo');
-    const progressContainer = card.querySelector('.turbo-progress-container');
-    const progressFill = card.querySelector('.turbo-progress-fill');
-    const progressStep = card.querySelector('.turbo-step');
-    const progressPercent = card.querySelector('.turbo-percent');
-    const turboResult = card.querySelector('.turbo-result');
-
-    // Активируем прогресс-бар
-    if (progressContainer) {
-        progressContainer.classList.add('active');
-    }
-    if (btn) {
-        btn.disabled = true;
-        btn.innerHTML = '⏳ Анализ...';
-    }
-
-    // ===== ШАГИ ТУРБО-АНАЛИЗА =====
-    const steps = [
-        { icon: '📊', label: 'Загрузка H2H истории' },
-        { icon: '📈', label: 'Анализ формы команд (10 матчей)' },
-        { icon: '🏆', label: 'Турнирная таблица и мотивация' },
-        { icon: '🌤️', label: 'Получение погоды на стадионе' },
-        { icon: '🧠', label: 'Прогноз xG и тотала' },
-        { icon: '🕵️', label: 'Дополнительный анализ + Непредсказуемость' },
-        { icon: '💰', label: 'Value Betting проверка' },
-        { icon: '🔍', label: 'Итоговый прогноз' }
-    ];
-
-    let totalSteps = steps.length;
-    let currentStep = 0;
-    let results = {};
-
     try {
-
-        // ===== ШАГ 1: Загрузка H2H =====
-        currentStep++;
-        updateTurboProgress(progressFill, progressStep, progressPercent, currentStep, totalSteps, 
-            steps[currentStep - 1].icon + ' ' + steps[currentStep - 1].label);
-
-        document.getElementById('homeTeamH2H').value = match.home;
-        document.getElementById('awayTeamH2H').value = match.away;
-        await loadH2H();
-        await delay(300);
-
-        // ===== ШАГ 2: Анализ формы (10 матчей) =====
-        currentStep++;
-        updateTurboProgress(progressFill, progressStep, progressPercent, currentStep, totalSteps,
-            steps[currentStep - 1].icon + ' ' + steps[currentStep - 1].label);
-
-        let homeForm = 50, awayForm = 50;
-        let homeRecentForm = '—', awayRecentForm = '—';
-        let homeGoalsScored = 0, awayGoalsScored = 0;
-        let homeGoalsConceded = 0, awayGoalsConceded = 0;
-
-        try {
-            const apiKey = localStorage.getItem('quantum_api_key');
-            if (apiKey) {
-                const homeSearch = await fetchWithCache('teams?search=' + encodeURIComponent(match.home), {
-                    headers: { 'x-apisports-key': apiKey }
-                }, CONFIG.CACHE.API_TTL);
-                const awaySearch = await fetchWithCache('teams?search=' + encodeURIComponent(match.away), {
-                    headers: { 'x-apisports-key': apiKey }
-                }, CONFIG.CACHE.API_TTL);
-
-                if (homeSearch?.response?.length > 0 && awaySearch?.response?.length > 0) {
-                    const homeId = homeSearch.response[0].team.id;
-                    const awayId = awaySearch.response[0].team.id;
-
-                    const homeFixtures = await fetchWithCache(
-                        'fixtures?team=' + homeId + '&season=2025&last=10',
-                        { headers: { 'x-apisports-key': apiKey } },
-                        CONFIG.CACHE.API_TTL
-                    );
-                    const awayFixtures = await fetchWithCache(
-                        'fixtures?team=' + awayId + '&season=2025&last=10',
-                        { headers: { 'x-apisports-key': apiKey } },
-                        CONFIG.CACHE.API_TTL
-                    );
-
-                    if (homeFixtures?.response?.length > 0) {
-                        let wins = 0, draws = 0, losses = 0;
-                        let goalsFor = 0, goalsAgainst = 0;
-                        const form = [];
-                        homeFixtures.response.forEach(m => {
-                            const isHome = m.teams.home.id === homeId;
-                            const scored = isHome ? m.goals.home : m.goals.away;
-                            const conceded = isHome ? m.goals.away : m.goals.home;
-                            goalsFor += scored || 0;
-                            goalsAgainst += conceded || 0;
-                            if (scored > conceded) { wins++; form.push('✔️'); }
-                            else if (scored === conceded) { draws++; form.push('➖'); }
-                            else { losses++; form.push('✖️'); }
-                        });
-                        homeForm = Math.round((wins / homeFixtures.response.length) * 100);
-                        homeRecentForm = form.join(' ');
-                        homeGoalsScored = Math.round(goalsFor / homeFixtures.response.length);
-                        homeGoalsConceded = Math.round(goalsAgainst / homeFixtures.response.length);
-                    }
-
-                    if (awayFixtures?.response?.length > 0) {
-                        let wins = 0, draws = 0, losses = 0;
-                        let goalsFor = 0, goalsAgainst = 0;
-                        const form = [];
-                        awayFixtures.response.forEach(m => {
-                            const isHome = m.teams.home.id === awayId;
-                            const scored = isHome ? m.goals.home : m.goals.away;
-                            const conceded = isHome ? m.goals.away : m.goals.home;
-                            goalsFor += scored || 0;
-                            goalsAgainst += conceded || 0;
-                            if (scored > conceded) { wins++; form.push('✔️'); }
-                            else if (scored === conceded) { draws++; form.push('➖'); }
-                            else { losses++; form.push('✖️'); }
-                        });
-                        awayForm = Math.round((wins / awayFixtures.response.length) * 100);
-                        awayRecentForm = form.join(' ');
-                        awayGoalsScored = Math.round(goalsFor / awayFixtures.response.length);
-                        awayGoalsConceded = Math.round(goalsAgainst / awayFixtures.response.length);
-                    }
-                }
-            }
-        } catch (e) {
-            console.log('⚠️ Ошибка загрузки формы:', e);
-            if (state.h2hData && state.h2hData.length > 0) {
-                const wins = state.h2hData.filter(m => m.homeScore > m.awayScore).length;
-                const awayWins = state.h2hData.filter(m => m.awayScore > m.homeScore).length;
-                homeForm = Math.round((wins / state.h2hData.length) * 100);
-                awayForm = Math.round((awayWins / state.h2hData.length) * 100);
-            }
+        // 1. Проверяем, что функция вызвана
+        showToast('⏳ Запуск Турбо-анализа...', 'info');
+        
+        // 2. Находим матч
+        const match = state.predictions?.find(m => m.id === matchId);
+        console.log('📊 Найден матч:', match);
+        
+        if (!match) {
+            showToast('❌ Матч не найден', 'error');
+            return;
         }
-        await delay(200);
-
-        // ===== ШАГ 3: Мотивация и турнирная таблица =====
-        currentStep++;
-        updateTurboProgress(progressFill, progressStep, progressPercent, currentStep, totalSteps,
-            steps[currentStep - 1].icon + ' ' + steps[currentStep - 1].label);
-
-        let homePosition = 10, awayPosition = 10;
-        let motivationText = 'Средняя мотивация';
-        let motivationFactor = 1.0;
-
-        try {
-            const apiKey = localStorage.getItem('quantum_api_key');
-            if (apiKey) {
-                const leagueId = match.leagueId || 39;
-                const standings = await fetchWithCache(
-                    'standings?league=' + leagueId + '&season=2025',
-                    { headers: { 'x-apisports-key': apiKey } },
-                    CONFIG.CACHE.API_TTL
-                );
-                if (standings?.response?.[0]?.league?.standings?.[0]) {
-                    const teams = standings.response[0].league.standings[0];
-                    const homeTeam = teams.find(t => t.team.name === match.home);
-                    const awayTeam = teams.find(t => t.team.name === match.away);
-                    if (homeTeam) {
-                        homePosition = homeTeam.rank;
-                        if (homePosition <= 4) motivationText = '🔥 Борьба за Лигу Чемпионов';
-                        else if (homePosition <= 6) motivationText = '🔥 Борьба за еврокубки';
-                        else if (homePosition >= 17) motivationText = '🔥 Борьба за выживание';
-                        motivationFactor = homePosition <= 4 ? 1.25 : homePosition >= 17 ? 1.3 : 1.0;
-                    }
-                    if (awayTeam) {
-                        awayPosition = awayTeam.rank;
-                        if (awayPosition <= 4) motivationText += ' + гости борются за ЛЧ';
-                        else if (awayPosition >= 17) motivationText += ' + гости борются за выживание';
-                    }
-                }
-            }
-        } catch (e) {
-            console.log('⚠️ Ошибка загрузки таблицы:', e);
+        
+        // 3. Находим карточку
+        const card = document.querySelector('.prediction-card[data-match-id="' + matchId + '"]');
+        console.log('📦 Найдена карточка:', card);
+        
+        if (!card) {
+            showToast('❌ Карточка не найдена', 'error');
+            return;
         }
-
-        const isDerbyMatch = isDerby(match.home, match.away);
-        if (isDerbyMatch) {
-            motivationText = '⚔️ ДЕРБИ! Максимальная мотивация';
-            motivationFactor = 1.35;
+        
+        // 4. Находим кнопку
+        const btn = card.querySelector('.btn-turbo');
+        console.log('🔘 Найдена кнопка:', btn);
+        
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '⏳ Анализ...';
         }
-        await delay(200);
-
-        // ===== ШАГ 4: Погода =====
-        currentStep++;
-        updateTurboProgress(progressFill, progressStep, progressPercent, currentStep, totalSteps,
-            steps[currentStep - 1].icon + ' ' + steps[currentStep - 1].label);
-
-        let weatherText = 'Нет данных';
-        let weatherTemp = 15;
-        let weatherCondition = 'neutral';
-        try {
-            const coords = await getStadiumCoords(match.home);
-            if (coords) {
-                const weather = await getWeatherByCoords(coords.lat, coords.lon);
-                if (weather) {
-                    state.weatherData = weather;
-                    state.weatherData.stadium = coords.name || 'Стадион';
-                    state.weatherData.city = coords.city || '';
-                    weatherTemp = weather.temp;
-                    const impact = getWeatherImpact(weather);
-                    weatherText = impact.text;
-                    weatherCondition = weather.condition || 'neutral';
-                }
-            }
-        } catch (e) { console.log('⚠️ Ошибка погоды:', e); }
-        await delay(200);
-
-        // ===== ШАГ 5: xG и тотал =====
-        currentStep++;
-        updateTurboProgress(progressFill, progressStep, progressPercent, currentStep, totalSteps,
-            steps[currentStep - 1].icon + ' ' + steps[currentStep - 1].label);
-
-        const homeGoals = match.homeScore !== null ? match.homeScore : homeGoalsScored || 1;
-        const awayGoals = match.awayScore !== null ? match.awayScore : awayGoalsScored || 1;
-        document.getElementById('homeGoals').value = homeGoals;
-        document.getElementById('awayGoals').value = awayGoals;
-
-        await generateUltimatePredictionExtended();
-        await delay(300);
-
-        const aiPrediction = document.getElementById('aiRecommendation')?.textContent || '—';
-        const aiConfidence = parseInt(document.getElementById('aiConfidenceExtended')?.textContent) || 50;
-        const aiHomeXG = parseFloat(document.getElementById('aiXG')?.textContent) || 1.2;
-        const aiAwayXG = parseFloat(document.getElementById('aiXGA')?.textContent) || 1.2;
-        const aiOzProb = document.getElementById('aiOzProb')?.textContent || '—';
-        const aiPoisson = document.getElementById('aiPoisson')?.textContent || '—';
-        const exactScore = document.querySelector('.score-grid .most-likely .score-value')?.textContent || '—';
-
-        let adjustedHomeXG = aiHomeXG;
-        let adjustedAwayXG = aiAwayXG;
-
-        if (homeForm > 60) adjustedHomeXG *= 1.1;
-        if (awayForm > 60) adjustedAwayXG *= 1.05;
-        if (homeForm < 40) adjustedHomeXG *= 0.9;
-        if (awayForm < 40) adjustedAwayXG *= 0.95;
-
-        adjustedHomeXG *= motivationFactor;
-        adjustedAwayXG *= motivationFactor;
-
-        if (weatherCondition === 'rain') { adjustedHomeXG *= 0.85; adjustedAwayXG *= 0.85; }
-        if (weatherCondition === 'snow') { adjustedHomeXG *= 0.75; adjustedAwayXG *= 0.75; }
-        if (weatherCondition === 'hot') { adjustedHomeXG *= 0.9; adjustedAwayXG *= 0.9; }
-        if (weatherCondition === 'good') { adjustedHomeXG *= 1.05; adjustedAwayXG *= 1.05; }
-        await delay(200);
-
-        // ===== ШАГ 6: Детектив + Непредсказуемость =====
-        currentStep++;
-        updateTurboProgress(progressFill, progressStep, progressPercent, currentStep, totalSteps,
-            steps[currentStep - 1].icon + ' ' + steps[currentStep - 1].label);
-
-        const detectiveResult = runAIDetective(
-            match.home,
-            match.away,
-            homeForm,
-            awayForm,
-            state.h2hData,
-            state.weatherData
-        );
-
-        const homeUnpred = calculateUnpredictability(match.home, state.h2hData);
-        const awayUnpred = calculateUnpredictability(match.away, state.h2hData);
-
-        detectiveResult.homeUnpredictability = homeUnpred;
-        detectiveResult.awayUnpredictability = awayUnpred;
-        detectiveResult.homeRecentForm = homeRecentForm;
-        detectiveResult.awayRecentForm = awayRecentForm;
-        detectiveResult.homePosition = homePosition;
-        detectiveResult.awayPosition = awayPosition;
-        detectiveResult.motivationText = motivationText;
-        detectiveResult.weatherText = weatherText;
-        detectiveResult.homeGoalsScored = homeGoalsScored;
-        detectiveResult.awayGoalsScored = awayGoalsScored;
-        detectiveResult.homeGoalsConceded = homeGoalsConceded;
-        detectiveResult.awayGoalsConceded = awayGoalsConceded;
-        detectiveResult.adjustedHomeXG = adjustedHomeXG;
-        detectiveResult.adjustedAwayXG = adjustedAwayXG;
-
-        let confidenceModifier = 1.0;
-        if (homeUnpred.level === 'high' && awayUnpred.level === 'high') {
-            confidenceModifier = 0.50;
-        } else if (homeUnpred.level === 'high' || awayUnpred.level === 'high') {
-            confidenceModifier = 0.65;
-        } else if (homeUnpred.level === 'medium' && awayUnpred.level === 'medium') {
-            confidenceModifier = 0.85;
-        } else if (homeUnpred.level === 'medium' || awayUnpred.level === 'medium') {
-            confidenceModifier = 0.90;
-        } else if (homeUnpred.level === 'low' && awayUnpred.level === 'low') {
-            confidenceModifier = 1.10;
-        } else if (homeUnpred.level === 'low' || awayUnpred.level === 'low') {
-            confidenceModifier = 1.05;
+        
+        // 5. Имитируем прогресс
+        const progressContainer = card.querySelector('.turbo-progress-container');
+        const progressFill = card.querySelector('.turbo-progress-fill');
+        const progressStep = card.querySelector('.turbo-step');
+        const progressPercent = card.querySelector('.turbo-percent');
+        
+        if (progressContainer) {
+            progressContainer.classList.add('active');
         }
-
-        confidenceModifier = Math.min(1.3, Math.max(0.5, confidenceModifier));
-        await delay(200);
-
-        // ===== ШАГ 7: Value Betting =====
-        currentStep++;
-        updateTurboProgress(progressFill, progressStep, progressPercent, currentStep, totalSteps,
-            steps[currentStep - 1].icon + ' ' + steps[currentStep - 1].label);
-
-        const odds = match.odds || 1.85;
-        const aiProb = aiConfidence / 100;
-        const valueResult = calculateValueBet(aiProb, odds);
-        await delay(200);
-
-        // ===== ШАГ 8: Итоговый прогноз =====
-        currentStep++;
-        updateTurboProgress(progressFill, progressStep, progressPercent, currentStep, totalSteps,
-            steps[currentStep - 1].icon + ' ' + steps[currentStep - 1].label);
-
-        let score = 20;
-        if (aiConfidence >= 70) score += 30;
-        else if (aiConfidence >= 50) score += 20;
-        else score += 10;
-
-        if (homeForm > 60 || awayForm > 60) score += 15;
-        if (homeForm > 70 || awayForm > 70) score += 10;
-        if (motivationFactor > 1.2) score += 15;
-        if (isDerbyMatch) score += 10;
-
-        if (weatherCondition === 'good') score += 10;
-        else if (weatherCondition === 'neutral') score += 5;
-        else if (weatherCondition === 'rain' || weatherCondition === 'snow') score -= 15;
-        else if (weatherCondition === 'hot' || weatherCondition === 'cold') score -= 10;
-
-        if (valueResult.isValue) {
-            const evBonus = Math.min(25, Math.round(valueResult.ev * 100));
-            score += evBonus;
+        
+        // 6. Имитируем шаги
+        const steps = ['Загрузка H2H', 'Анализ формы', 'Мотивация', 'Погода', 'xG', 'Детектив', 'Value', 'Итог'];
+        
+        for (let i = 0; i < steps.length; i++) {
+            const pct = Math.round(((i + 1) / steps.length) * 100);
+            if (progressFill) progressFill.style.width = pct + '%';
+            if (progressStep) progressStep.textContent = 'Шаг ' + (i + 1) + '/' + steps.length + ': ' + steps[i];
+            if (progressPercent) progressPercent.textContent = pct + '%';
+            await delay(300);
+            console.log('✅ Шаг ' + (i + 1) + ': ' + steps[i]);
         }
-
-        if (homeUnpred.level === 'high' && awayUnpred.level === 'high') score -= 30;
-        else if (homeUnpred.level === 'high' || awayUnpred.level === 'high') score -= 20;
-        else if (homeUnpred.level === 'medium' && awayUnpred.level === 'medium') score -= 15;
-        else if (homeUnpred.level === 'medium' || awayUnpred.level === 'medium') score -= 10;
-        else if (homeUnpred.level === 'low' && awayUnpred.level === 'low') score += 10;
-        else if (homeUnpred.level === 'low' || awayUnpred.level === 'low') score += 5;
-
-        score = Math.max(5, Math.min(100, Math.round(score)));
-
-        let cleanPrediction = aiPrediction || '—';
-        cleanPrediction = cleanPrediction.replace(/\s*\|\s*💰\s*EV:\s*\d+\.?\d*%/g, '');
-        cleanPrediction = cleanPrediction.replace(/\s*\|\s*🏆\s*VALUE:\s*\d+\.?\d*%/g, '');
-        cleanPrediction = cleanPrediction.replace(/💰\s*EV:\s*\d+\.?\d*%\s*/g, '');
-        cleanPrediction = cleanPrediction.replace(/🏆\s*VALUE:\s*\d+\.?\d*%\s*/g, '');
-
-        let finalPrediction = cleanPrediction;
-        if (valueResult.isValue) {
-            finalPrediction = cleanPrediction + ' | 💰 EV: ' + valueResult.evPercent;
-        } else {
-            finalPrediction = cleanPrediction + ' | ⚖️ Нет Value';
-        }
-
-        let finalRecommendation = '';
-        let recommendationColor = '';
-        let recommendationEmoji = '';
-
-        if (score >= 75 && valueResult.isValue) {
-            finalRecommendation = '✅ ОТЛИЧНЫЙ СИГНАЛ + VALUE! Рекомендуется';
-            recommendationColor = '#2ecc71';
-            recommendationEmoji = '🔥';
-        } else if (score >= 70 && !valueResult.isValue) {
-            finalRecommendation = '✅ Хороший прогноз, но без Value';
-            recommendationColor = '#2ecc71';
-            recommendationEmoji = '📈';
-        } else if (score >= 60 && valueResult.isValue) {
-            finalRecommendation = '🟡 Хороший прогноз с Value, можно рассмотреть';
-            recommendationColor = '#f1c40f';
-            recommendationEmoji = '💰';
-        } else if (score >= 55) {
-            finalRecommendation = '🟡 Средний прогноз, с осторожностью';
-            recommendationColor = '#f1c40f';
-            recommendationEmoji = '⚖️';
-        } else if (score >= 45) {
-            finalRecommendation = '🟠 Слабый прогноз, высокий риск';
-            recommendationColor = '#f39c12';
-            recommendationEmoji = '⚠️';
-        } else {
-            finalRecommendation = '🔴 Лучше пропустить, низкая уверенность';
-            recommendationColor = '#e74c3c';
-            recommendationEmoji = '❌';
-        }
-
-        if (isDerbyMatch) {
-            finalRecommendation += ' ⚔️ Дерби!';
-        }
-
-        results = {
-            match: match.home + ' vs ' + match.away,
-            prediction: finalPrediction,
-            confidence: Math.min(95, Math.max(5, Math.round(score))),
-            score: score,
-            homeXG: adjustedHomeXG,
-            awayXG: adjustedAwayXG,
-            ozProb: aiOzProb,
-            poisson: aiPoisson,
-            exactScore: exactScore,
-            homeForm: homeForm,
-            awayForm: awayForm,
-            homeRecentForm: homeRecentForm,
-            awayRecentForm: awayRecentForm,
-            homePosition: homePosition,
-            awayPosition: awayPosition,
-            motivation: motivationText,
-            motivationFactor: motivationFactor,
-            derby: isDerbyMatch,
-            weather: weatherText,
-            weatherTemp: weatherTemp,
-            weatherCondition: weatherCondition,
-            homeGoalsScored: homeGoalsScored,
-            awayGoalsScored: awayGoalsScored,
-            homeGoalsConceded: homeGoalsConceded,
-            awayGoalsConceded: awayGoalsConceded,
-            detective: detectiveResult.summary || 'Нет данных',
-            value: valueResult.evPercent || '0%',
-            isValue: valueResult.isValue || false,
-            recommendation: finalRecommendation,
-            recommendationColor: recommendationColor,
-            recommendationEmoji: recommendationEmoji,
-            odds: odds,
-            homeUnpredictability: homeUnpred,
-            awayUnpredictability: awayUnpred,
-            confidenceModifier: confidenceModifier,
-            finalScore: score
-        };
-
-        // ==== ОТОБРАЖАЕМ РЕЗУЛЬТАТ ====
+        
+        // 7. Показываем результат
+        const turboResult = card.querySelector('.turbo-result');
         if (turboResult) {
             turboResult.classList.add('active');
             turboResult.innerHTML = `
-                <div class="row"><span class="label">🎯 Прогноз:</span><span class="value good">${results.prediction}</span></div>
-                <div class="row"><span class="label">⚽ Точный счет:</span><span class="value good">${results.exactScore}</span></div>
-                <div class="row"><span class="label">📊 Общая оценка:</span><span class="value ${results.score >= 60 ? 'good' : results.score >= 40 ? 'warn' : 'bad'}">${results.score}%</span></div>
-                <div class="row"><span class="label">💰 Value:</span><span class="value ${results.isValue ? 'good' : 'warn'}">${results.value}</span></div>
-                <div class="row"><span class="label">🏆 Мотивация:</span><span class="value">${results.motivation}</span></div>
-                <div class="row"><span class="label">📊 Форма хозяев:</span><span class="value">${results.homeForm}% (${results.homeRecentForm || '—'})</span></div>
-                <div class="row"><span class="label">📊 Форма гостей:</span><span class="value">${results.awayForm}% (${results.awayRecentForm || '—'})</span></div>
-                <div class="row"><span class="label">🌤️ Погода:</span><span class="value">${results.weather}</span></div>
-                <div class="row"><span class="label">🧠 xG:</span><span class="value">${results.homeXG.toFixed(2)} - ${results.awayXG.toFixed(2)}</span></div>
-                <div class="row"><span class="label">🕵️ Анализ:</span><span class="value">${results.detective}</span></div>
-                <div style="border-top:1px solid #2a3140;padding-top:4px;margin-top:4px;">
-                    <div style="font-size:11px;color:#888;margin-bottom:2px;">📊 НЕПРЕДСКАЗУЕМОСТЬ (6 факторов):</div>
-                    <div style="display:flex;flex-wrap:wrap;gap:4px;">
-                        <span class="badge-unpredictability ${results.homeUnpredictability.level}">
-                            🏠 ${results.homeUnpredictability.level.toUpperCase()}
-                        </span>
-                        <span class="badge-unpredictability ${results.awayUnpredictability.level}">
-                            ✈️ ${results.awayUnpredictability.level.toUpperCase()}
-                        </span>
-                    </div>
-                    <div style="font-size:9px;color:#555;margin-top:2px;">
-                        ⚡ Модификатор уверенности: ${Math.round(results.confidenceModifier * 100)}%
-                        ${results.confidenceModifier < 1 ? ' (штраф)' : ' (бонус)'}
-                    </div>
-                    <div style="font-size:9px;color:#555;">
-                        🔄 Чередование: ${results.homeUnpredictability.details?.alternationRate || '—'} · 
-                        🟢 Сухие: ${results.homeUnpredictability.details?.dryRate || '—'} · 
-                        🔴 Результативные: ${results.homeUnpredictability.details?.highScoreRate || '—'}
-                    </div>
-                </div>
-                <div class="row" style="border-top:1px solid #2a3140;padding-top:4px;margin-top:4px;">
-                    <span style="color:${results.recommendationColor};font-weight:700;">${results.recommendationEmoji} ${results.recommendation}</span>
+                <div class="row"><span class="label">🎯 Прогноз:</span><span class="value good">✅ ТЕСТ РАБОТАЕТ!</span></div>
+                <div class="row"><span class="label">📊 Оценка:</span><span class="value good">85%</span></div>
+                <div class="row"><span class="label">💰 Value:</span><span class="value good">+15%</span></div>
+                <div style="border-top:1px solid #2a3140;padding-top:4px;margin-top:4px;color:#2ecc71;font-weight:700;">
+                    ✅ ТУРБО-АНАЛИЗ РАБОТАЕТ!
                 </div>
             `;
         }
-
-        // ==== ВИЗУАЛЬНЫЕ ИНДИКАТОРЫ ====
+        
+        // 8. Разблокируем кнопку
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '🔥 Турбо-анализ v7.1';
+        }
+        
+        if (progressContainer) {
+            setTimeout(() => {
+                progressContainer.classList.remove('active');
+            }, 1000);
+        }
+        
+        showToast('✅ Турбо-анализ завершён! (тест)', 'success');
+        
+    } catch (error) {
+        console.error('❌ Ошибка:', error);
+        showToast('❌ Ошибка: ' + error.message, 'error');
+        
+        // Разблокируем кнопку в случае ошибки
+        const card = document.querySelector('.prediction-card[data-match-id="' + matchId + '"]');
         if (card) {
-            card.classList.remove('unpredictability-high', 'unpredictability-medium', 'unpredictability-low');
-
-            if (results.homeUnpredictability.level === 'high' || results.awayUnpredictability.level === 'high') {
-                card.classList.add('unpredictability-high');
-            } else if (results.homeUnpredictability.level === 'medium' || results.awayUnpredictability.level === 'medium') {
-                card.classList.add('unpredictability-medium');
-            } else {
-                card.classList.add('unpredictability-low');
+            const btn = card.querySelector('.btn-turbo');
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = '🔥 Турбо-анализ v7.1';
             }
-
-            card.classList.remove('analyzed-excellent', 'analyzed-good', 'analyzed-risky');
-            if (results.score >= 75) {
-                card.classList.add('analyzed-excellent');
-            } else if (results.score >= 55) {
-                card.classList.add('analyzed-good');
-            } else {
-                card.classList.add('analyzed-risky');
+            const progressContainer = card.querySelector('.turbo-progress-container');
+            if (progressContainer) {
+                progressContainer.classList.remove('active');
             }
         }
-
-    } catch (error) {
-        console.error('❌ Ошибка в Турбо-анализе:', error);
-        showToast('❌ Ошибка: ' + error.message, 'error');
     }
-
-    // ==== ЗАВЕРШЕНИЕ (ВСЕГДА ВЫПОЛНЯЕТСЯ) ====
-    if (progressContainer) {
-        progressContainer.classList.remove('active');
-    }
-    if (btn) {
-        btn.disabled = false;
-        btn.innerHTML = '🔥 Турбо-анализ v7.1';
-    }
-
-    state.isTurboRunning = false;
-
-    // Показываем модальное окно с результатами
-    if (results && results.score) {
-        const modalData = {
-            match: results.match,
-            prediction: results.prediction,
-            confidence: results.confidence,
-            value: results.value,
-            detective: results.detective,
-            weather: state.weatherData ? state.weatherData.temp + '°C, ' + state.weatherData.description : 'Нет данных',
-            home: parseInt(document.getElementById('homeGoals').value) || 0,
-            away: parseInt(document.getElementById('awayGoals').value) || 0,
-            mode: state.currentMode,
-            homeXG: results.homeXG,
-            awayXG: results.awayXG,
-            homeForm: results.homeForm,
-            awayForm: results.awayForm,
-            motivationHome: results.motivationFactor || 1.0,
-            motivationAway: results.motivationFactor || 1.0,
-            isDerby: results.derby ? 1 : 0,
-            temperature: state.weatherData?.temp || 15,
-            windSpeed: state.weatherData?.wind_speed || 5,
-            humidity: state.weatherData?.humidity || 60,
-            precipitation: state.weatherData?.weather?.toLowerCase().includes('rain') ? 1 : 0,
-            league: match.league || null,
-            finalScore: results.score
-        };
-        showSaveModal(modalData);
-        showToast('✅ Турбо-анализ v7.1 завершён! Оценка: ' + results.score + '%', 'success');
-    } else {
-        showToast('⚠️ Турбо-анализ завершён, но результат не получен', 'warn');
-    }
-}
-
-// ===== ФУНКЦИЯ ОБНОВЛЕНИЯ ПРОГРЕССА =====
-function updateTurboProgress(fill, step, percent, current, total, label) {
-    const pct = Math.round((current / total) * 100);
-    if (fill) fill.style.width = pct + '%';
-    if (step) step.textContent = 'Шаг ' + current + '/' + total + ': ' + label;
-    if (percent) percent.textContent = pct + '%';
 }
 
 // ================================================================
