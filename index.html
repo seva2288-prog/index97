@@ -8997,6 +8997,8 @@ function saveApiKey() {
     document.getElementById('apiStatus').style.color = '#2ecc71';
 
     showToast('✅ API ключ сохранен', 'success');
+    
+    // ПРОВЕРЯЕМ КЛЮЧ СРАЗУ
     checkApiStatus();
     refreshPredictions();
 }
@@ -9018,6 +9020,8 @@ function saveWeatherKey() {
     document.getElementById('weatherStatus').style.color = '#2ecc71';
 
     showToast('✅ Ключ погоды сохранен', 'success');
+    
+    // ЗАГРУЖАЕМ ПОГОДУ СРАЗУ
     loadHeaderWeather();
 }
 
