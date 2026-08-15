@@ -9563,83 +9563,89 @@ window.addEventListener('appinstalled', (evt) => {
  */
 async function initApp() {
     console.log('⚛️ ' + APP_NAME + ' v' + APP_VERSION + ' - Инициализация...');
-    console.log('📅 ' + BUILD_DATE);
-
-    // 1. Инициализация темы
-    initTheme();
-
-    // 2. Загрузка данных из localStorage
-    state.bets = JSON.parse(localStorage.getItem('quantum_bets') || '[]');
-    state.valueBets = JSON.parse(localStorage.getItem('quantum_value_bets') || '[]');
-    state.apiKey = localStorage.getItem('quantum_api_key') || '';
-    state.weatherKey = localStorage.getItem('quantum_weather_key') || '';
-
-    // 3. Настройка полей ввода
-    document.getElementById('apiKeyInput').value = state.apiKey;
-    document.getElementById('weatherKeyInput').value = state.weatherKey;
-
-    // 4. Загрузка лиг
+    
     try {
-        const leagues = localStorage.getItem('quantum_leagues');
-        if (leagues) {
-            LEAGUES = JSON.parse(leagues);
-            console.log('✅ Лиги загружены из кэша');
+        // 1. Инициализация темы
+        initTheme();
+
+        // 2. Загрузка данных из localStorage
+        state.bets = JSON.parse(localStorage.getItem('quantum_bets') || '[]');
+        state.valueBets = JSON.parse(localStorage.getItem('quantum_value_bets') || '[]');
+        state.apiKey = localStorage.getItem('quantum_api_key') || '';
+        state.weatherKey = localStorage.getItem('quantum_weather_key') || '';
+
+        // 3. Настройка полей ввода
+        document.getElementById('apiKeyInput').value = state.apiKey;
+        document.getElementById('weatherKeyInput').value = state.weatherKey;
+
+        // 4. Загрузка прогнозов (с обработкой ошибок)
+        try {
+            const matches = await generatePredictions();
+            state.predictions = matches;
+            state.lastUpdate = new Date();
+            console.log('✅ Загружено ' + matches.length + ' матчей');
+        } catch (error) {
+            console.warn('⚠️ Ошибка загрузки матчей, используем тестовые:', error);
+            state.predictions = getDefaultMatches();
+            showToast('⚠️ Используются тестовые матчи', 'warn');
         }
-    } catch (e) {}
 
-    // 5. Генерация прогнозов
-    try {
-        const matches = await generatePredictions();
-        state.predictions = matches;
-        state.lastUpdate = new Date();
-        console.log('✅ Загружено ' + matches.length + ' матчей');
+        // 5. Рендеринг
+        renderPredictions();
+        renderTopPredictions();
+        renderBetHistory();
+        renderHistory();
+        renderStats();
+        renderDashboard();
+        renderUltimateDashboard();
+        renderChartCanvas();
+        renderInsights();
+        renderScannerHistory();
+        updateAIStatus();
+        updateSum();
+
+        // 6. Загрузка погоды (с обработкой ошибок)
+        try {
+            await loadHeaderWeather();
+        } catch (error) {
+            console.warn('⚠️ Ошибка загрузки погоды:', error);
+            document.getElementById('weatherIconHeader').textContent = '❌';
+            document.getElementById('weatherTempHeader').textContent = '--°C';
+            document.getElementById('weatherDescHeader').textContent = 'Нет данных';
+        }
+
+        // 7. Проверка API
+        checkApiStatus();
+
+        // 8. Уведомления
+        requestNotificationPermission();
+
+        // 9. Автообновление
+        if (!state.updateTimer) {
+            state.updateTimer = setInterval(() => {
+                refreshPredictions();
+                checkNotifications();
+            }, CONFIG.CACHE.UPDATE_INTERVAL || 30 * 60 * 1000);
+        }
+
+        // 10. Скрываем загрузку
+        const overlay = document.getElementById('loadingOverlay');
+        if (overlay) overlay.classList.remove('active');
+
+        console.log('🚀 ' + APP_NAME + ' v' + APP_VERSION + ' готов к работе!');
+        showToast('⚛️ ' + APP_NAME + ' v' + APP_VERSION + ' загружен!', 'success');
+
     } catch (error) {
-        console.error('❌ Ошибка загрузки матчей:', error);
+        console.error('❌ Критическая ошибка:', error);
+        showToast('❌ Ошибка: ' + error.message, 'error');
+        const overlay = document.getElementById('loadingOverlay');
+        if (overlay) overlay.classList.remove('active');
+        
+        // ПОКАЗЫВАЕМ ЧТО-ТО ВМЕСТО ПУСТОГО ЭКРАНА
         state.predictions = getDefaultMatches();
+        renderPredictions();
+        renderTopPredictions();
     }
-
-    // 6. Рендеринг
-    renderPredictions();
-    renderTopPredictions();
-    renderBetHistory();
-    renderHistory();
-    renderStats();
-    renderDashboard();
-    renderUltimateDashboard();
-    renderChartCanvas();
-    renderInsights();
-    renderScannerHistory();
-    updateAIStatus();
-    updateSum();
-
-    // 7. Загрузка погоды
-    await loadHeaderWeather();
-
-    // 8. Проверка API
-    checkApiStatus();
-
-    // 9. Уведомления
-    requestNotificationPermission();
-
-    // 10. Автообновление
-    if (!state.updateTimer) {
-        state.updateTimer = setInterval(() => {
-            refreshPredictions();
-            checkNotifications();
-        }, CONFIG.CACHE.UPDATE_INTERVAL || 30 * 60 * 1000);
-    }
-
-    // 11. Показываем информацию о версии
-    console.log('🚀 ' + APP_NAME + ' v' + APP_VERSION + ' готов к работе!');
-    console.log('📊 Всего ставок: ' + state.bets.length);
-    console.log('💰 Value ставок: ' + state.valueBets.length);
-    console.log('⚽ Матчей: ' + state.predictions.length);
-
-    // 12. Скрываем загрузку
-    const overlay = document.getElementById('loadingOverlay');
-    if (overlay) overlay.classList.remove('active');
-
-    showToast('⚛️ ' + APP_NAME + ' v' + APP_VERSION + ' загружен!', 'success');
 }
 
 // ================================================================
