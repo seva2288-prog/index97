@@ -14,7 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
         /* ================================================================
-           RESET & BASE
+           RESET & BASE — НАВИГАЦИЯ ИСПРАВЛЕНА
            ================================================================ */
         * {
             box-sizing: border-box;
@@ -41,6 +41,7 @@
             transition: background .3s, color .3s;
         }
         
+        /* ТЕМА */
         body.light {
             background: #f0f2f5;
             color: #1a1a1a;
@@ -210,7 +211,7 @@
         }
 
         /* ================================================================
-           MAIN CONTENT
+           MAIN CONTENT — СКРОЛЛИТСЯ, НАВИГАЦИЯ СНАРУЖИ
            ================================================================ */
         .main-content {
             flex: 1;
@@ -271,7 +272,7 @@
         }
 
         /* ================================================================
-           BOTTOM NAVIGATION (ПРИКЛЕЕНА СНИЗУ)
+           BOTTOM NAVIGATION — ПРИКЛЕЕНА СНИЗУ (ИСПРАВЛЕНО)
            ================================================================ */
         .bottom-nav {
             flex-shrink: 0;
@@ -2464,7 +2465,7 @@
     <!-- КОНЕЦ MAIN CONTENT -->
 
     <!-- ================================================================
-    НИЖНЯЯ НАВИГАЦИЯ (ПРИКЛЕЕНА СНИЗУ)
+    НИЖНЯЯ НАВИГАЦИЯ (ПРИКЛЕЕНА СНИЗУ) — ИСПРАВЛЕНО
     ================================================================ -->
     <div class="bottom-nav" id="bottomNav">
         <button class="nav-btn active" data-tab="analysis" onclick="switchTab('analysis')">
@@ -2517,8 +2518,8 @@
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
     </div>
- <script>
-    
+    <script>
+
 // ================================================================
 // 1. ВЕРСИЯ И КОНФИГУРАЦИЯ
 // ================================================================
@@ -2623,7 +2624,7 @@ const CONFIG = {
 };
 
 // ================================================================
-// 2. ID ВСЕХ ЛИГ (41 ЛИГА) + РАСШИРЕННЫЕ ДАННЫЕ
+// 2. ID ВСЕХ ЛИГ (41 ЛИГА)
 // ================================================================
 
 const LEAGUE_IDS = {
@@ -2684,7 +2685,7 @@ const LEAGUE_IDS = {
 };
 
 // ================================================================
-// 3. РАСШИРЕННАЯ ИНФОРМАЦИЯ О ЛИГАХ
+// 3. ИНФОРМАЦИЯ О ЛИГАХ
 // ================================================================
 
 const LEAGUE_INFO = {
@@ -2732,7 +2733,7 @@ const LEAGUE_INFO = {
 };
 
 // ================================================================
-// 4. РАСШИРЕННАЯ СТАТИСТИКА ЛИГ (ПОЛНАЯ)
+// 4. СТАТИСТИКА ЛИГ
 // ================================================================
 
 const LEAGUE_STATISTICS = {
@@ -2784,7 +2785,7 @@ const LEAGUE_GROUPS = {
 };
 
 // ================================================================
-// 6. РАСШИРЕННЫЙ СПИСОК ДЕРБИ (60+ ПАР)
+// 6. ДЕРБИ (60+ ПАР)
 // ================================================================
 
 const DERBY_PAIRS = [
@@ -2799,7 +2800,6 @@ const DERBY_PAIRS = [
     ['Barcelona', 'Espanyol'],
     ['Atletico Madrid', 'Real Madrid'],
     ['Sevilla', 'Betis'],
-
     // Англия
     ['Liverpool', 'Manchester United'],
     ['Manchester City', 'Manchester United'],
@@ -2814,7 +2814,6 @@ const DERBY_PAIRS = [
     ['Liverpool', 'Chelsea'],
     ['Manchester United', 'Manchester City'],
     ['Arsenal', 'Chelsea'],
-
     // Италия
     ['AC Milan', 'Inter Milan'],
     ['Juventus', 'Torino'],
@@ -2825,7 +2824,6 @@ const DERBY_PAIRS = [
     ['Bologna', 'Parma'],
     ['Juventus', 'AC Milan'],
     ['Inter Milan', 'AC Milan'],
-
     // Германия
     ['Bayern Munich', 'Borussia Dortmund'],
     ['Schalke 04', 'Borussia Dortmund'],
@@ -2834,7 +2832,6 @@ const DERBY_PAIRS = [
     ['Stuttgart', 'Karlsruher'],
     ['Bayern Munich', 'Stuttgart'],
     ['Borussia Dortmund', 'Schalke 04'],
-
     // Франция
     ['Paris Saint-Germain', 'Marseille'],
     ['Lyon', 'Saint-Etienne'],
@@ -2843,7 +2840,6 @@ const DERBY_PAIRS = [
     ['Bordeaux', 'Toulouse'],
     ['Paris Saint-Germain', 'Lyon'],
     ['Marseille', 'Nice'],
-
     // Нидерланды
     ['Ajax', 'Feyenoord'],
     ['Ajax', 'PSV Eindhoven'],
@@ -2851,7 +2847,6 @@ const DERBY_PAIRS = [
     ['Ajax', 'AZ Alkmaar'],
     ['FC Twente', 'Ajax'],
     ['Feyenoord', 'Sparta Rotterdam'],
-
     // Бельгия
     ['Anderlecht', 'Club Brugge'],
     ['Anderlecht', 'Standard Liege'],
@@ -2859,7 +2854,6 @@ const DERBY_PAIRS = [
     ['Genk', 'Anderlecht'],
     ['Standard Liege', 'Charleroi'],
     ['Royal Antwerp', 'Beerschot'],
-
     // Другие страны
     ['Celtic', 'Rangers'],
     ['Benfica', 'Porto'],
@@ -2886,7 +2880,7 @@ const DERBY_PAIRS = [
 ];
 
 // ================================================================
-// 7. РАСШИРЕННЫЙ СПИСОК КООРДИНАТ СТАДИОНОВ (250+)
+// 7. КООРДИНАТЫ СТАДИОНОВ (250+)
 // ================================================================
 
 const STADIUM_COORDS = {
@@ -2914,7 +2908,6 @@ const STADIUM_COORDS = {
     'Luton Town': { lat: 51.8845, lon: -0.4316 },
     'Bournemouth': { lat: 50.7352, lon: -1.8380 },
     'Coventry': { lat: 52.4481, lon: -1.4956 },
-
     // Испания (Ла Лига)
     'Real Madrid': { lat: 40.4531, lon: -3.6883 },
     'Barcelona': { lat: 41.3809, lon: 2.1228 },
@@ -2934,7 +2927,6 @@ const STADIUM_COORDS = {
     'Almeria': { lat: 36.8401, lon: -2.4359 },
     'Cadiz': { lat: 36.5029, lon: -6.1998 },
     'Las Palmas': { lat: 28.1041, lon: -15.4575 },
-
     // Италия (Серия А)
     'Juventus': { lat: 45.1096, lon: 7.6413 },
     'AC Milan': { lat: 45.4781, lon: 9.1240 },
@@ -2953,7 +2945,6 @@ const STADIUM_COORDS = {
     'Sassuolo': { lat: 44.5475, lon: 10.6824 },
     'Salernitana': { lat: 40.6394, lon: 14.8970 },
     'Lecce': { lat: 40.3540, lon: 18.1720 },
-
     // Германия (Бундеслига)
     'Bayern Munich': { lat: 48.2188, lon: 11.6247 },
     'Borussia Dortmund': { lat: 51.4926, lon: 7.4519 },
@@ -2972,7 +2963,6 @@ const STADIUM_COORDS = {
     'Freiburg': { lat: 48.0005, lon: 7.8370 },
     'Hoffenheim': { lat: 49.2399, lon: 8.7277 },
     'Augsburg': { lat: 48.3225, lon: 10.8849 },
-
     // Франция (Лига 1)
     'Paris Saint-Germain': { lat: 48.8414, lon: 2.2530 },
     'Marseille': { lat: 43.2698, lon: 5.3959 },
@@ -2990,7 +2980,6 @@ const STADIUM_COORDS = {
     'Strasbourg': { lat: 48.5606, lon: 7.7546 },
     'Reims': { lat: 49.2568, lon: 4.0269 },
     'Brest': { lat: 48.4012, lon: -4.4944 },
-
     // Нидерланды (Эредивизи)
     'Ajax': { lat: 52.3143, lon: 4.9421 },
     'Feyenoord': { lat: 51.8939, lon: 4.5236 },
@@ -3002,7 +2991,6 @@ const STADIUM_COORDS = {
     'Groningen': { lat: 53.2066, lon: 6.5878 },
     'Heerenveen': { lat: 52.9594, lon: 5.9361 },
     'Vitesse': { lat: 51.9587, lon: 5.8926 },
-
     // Бельгия (Про Лига)
     'Anderlecht': { lat: 50.8342, lon: 4.2984 },
     'Club Brugge': { lat: 51.1933, lon: 3.1808 },
@@ -3012,7 +3000,6 @@ const STADIUM_COORDS = {
     'Royal Antwerp': { lat: 51.2045, lon: 4.4150 },
     'Gent': { lat: 51.0560, lon: 3.7342 },
     'Mechelen': { lat: 51.0259, lon: 4.4823 },
-
     // Россия (РПЛ)
     'Spartak Moscow': { lat: 55.8170, lon: 37.4360 },
     'CSKA Moscow': { lat: 55.7920, lon: 37.5160 },
@@ -3026,7 +3013,6 @@ const STADIUM_COORDS = {
     'Dynamo Makhachkala': { lat: 42.9833, lon: 47.5000 },
     'Krylya Sovetov': { lat: 53.2423, lon: 50.2705 },
     'Ural': { lat: 56.8348, lon: 60.6074 },
-
     // Другие страны
     'Celtic': { lat: 55.8497, lon: -4.2056 },
     'Rangers': { lat: 55.8531, lon: -4.3090 },
@@ -3062,7 +3048,6 @@ const STADIUM_COORDS = {
     'Basel': { lat: 47.5405, lon: 7.6202 },
     'Young Boys': { lat: 46.9634, lon: 7.4654 },
     'Salzburg': { lat: 47.8165, lon: 13.0054 },
-
     // Города для погоды
     'London': { lat: 51.5074, lon: -0.1278 },
     'Paris': { lat: 48.8566, lon: 2.3522 },
@@ -3092,92 +3077,6 @@ const STADIUM_COORDS = {
     'Glasgow': { lat: 55.8642, lon: -4.2518 },
     'Edinburgh': { lat: 55.9533, lon: -3.1883 },
     'Dublin': { lat: 53.3498, lon: -6.2603 },
-    'Helsinki': { lat: 60.1699, lon: 24.9384 },
-    'Riga': { lat: 56.9496, lon: 24.1052 },
-    'Tallinn': { lat: 59.4370, lon: 24.7536 },
-    'Vilnius': { lat: 54.6872, lon: 25.2797 },
-    'Minsk': { lat: 53.9006, lon: 27.5590 },
-    'Kiev': { lat: 50.4501, lon: 30.5234 },
-    'Chisinau': { lat: 47.0105, lon: 28.8638 },
-    'Tbilisi': { lat: 41.7151, lon: 44.8271 },
-    'Yerevan': { lat: 40.1792, lon: 44.4991 },
-    'Baku': { lat: 40.4093, lon: 49.8671 },
-    'Astana': { lat: 51.1694, lon: 71.4491 },
-    'Tashkent': { lat: 41.2995, lon: 69.2401 },
-    'Almaty': { lat: 43.2220, lon: 76.8512 },
-    'Bishkek': { lat: 42.8746, lon: 74.5698 },
-    'Dushanbe': { lat: 38.5598, lon: 68.7870 },
-    'Ashgabat': { lat: 37.9601, lon: 58.3261 },
-    'Kabul': { lat: 34.5553, lon: 69.2075 },
-    'Tehran': { lat: 35.6892, lon: 51.3890 },
-    'Baghdad': { lat: 33.3152, lon: 44.3661 },
-    'Damascus': { lat: 33.5138, lon: 36.2765 },
-    'Beirut': { lat: 33.8938, lon: 35.5018 },
-    'Amman': { lat: 31.9454, lon: 35.9284 },
-    'Jerusalem': { lat: 31.7683, lon: 35.2137 },
-    'Riyadh': { lat: 24.7136, lon: 46.6753 },
-    'Dubai': { lat: 25.2048, lon: 55.2708 },
-    'Abu Dhabi': { lat: 24.4539, lon: 54.3773 },
-    'Doha': { lat: 25.2854, lon: 51.5310 },
-    'Manama': { lat: 26.2285, lon: 50.5860 },
-    'Kuwait City': { lat: 29.3759, lon: 47.9774 },
-    'Muscat': { lat: 23.5880, lon: 58.3829 },
-    'Sanaa': { lat: 15.3694, lon: 44.1910 },
-    'Aden': { lat: 12.7855, lon: 45.0187 },
-    'Djibouti': { lat: 11.5721, lon: 43.1456 },
-    'Mogadishu': { lat: 2.0469, lon: 45.3182 },
-    'Nairobi': { lat: -1.2921, lon: 36.8219 },
-    'Addis Ababa': { lat: 9.0320, lon: 38.7469 },
-    'Khartoum': { lat: 15.5007, lon: 32.5599 },
-    'Cairo': { lat: 30.0444, lon: 31.2357 },
-    'Tripoli': { lat: 32.8872, lon: 13.1913 },
-    'Tunis': { lat: 36.8065, lon: 10.1815 },
-    'Algiers': { lat: 36.7538, lon: 3.0588 },
-    'Rabat': { lat: 34.0209, lon: -6.8416 },
-    'Casablanca': { lat: 33.5731, lon: -7.5898 },
-    'Dakar': { lat: 14.7167, lon: -17.4677 },
-    'Abidjan': { lat: 5.3595, lon: -4.0083 },
-    'Accra': { lat: 5.6037, lon: -0.1870 },
-    'Lagos': { lat: 6.5244, lon: 3.3792 },
-    'Nairobi': { lat: -1.2921, lon: 36.8219 },
-    'Johannesburg': { lat: -26.2041, lon: 28.0473 },
-    'Cape Town': { lat: -33.9249, lon: 18.4241 },
-    'Buenos Aires': { lat: -34.6037, lon: -58.3816 },
-    'Sao Paulo': { lat: -23.5505, lon: -46.6333 },
-    'Rio de Janeiro': { lat: -22.9068, lon: -43.1729 },
-    'Santiago': { lat: -33.4489, lon: -70.6693 },
-    'Lima': { lat: -12.0464, lon: -77.0428 },
-    'Bogota': { lat: 4.7110, lon: -74.0721 },
-    'Mexico City': { lat: 19.4326, lon: -99.1332 },
-    'New York': { lat: 40.7128, lon: -74.0060 },
-    'Los Angeles': { lat: 34.0522, lon: -118.2437 },
-    'Toronto': { lat: 43.6532, lon: -79.3832 },
-    'Vancouver': { lat: 49.2827, lon: -123.1207 },
-    'Sydney': { lat: -33.8688, lon: 151.2093 },
-    'Melbourne': { lat: -37.8136, lon: 144.9631 },
-    'Auckland': { lat: -36.8485, lon: 174.7633 },
-    'Tokyo': { lat: 35.6762, lon: 139.6503 },
-    'Seoul': { lat: 37.5665, lon: 126.9780 },
-    'Beijing': { lat: 39.9042, lon: 116.4074 },
-    'Shanghai': { lat: 31.2304, lon: 121.4737 },
-    'Hong Kong': { lat: 22.3193, lon: 114.1694 },
-    'Singapore': { lat: 1.3521, lon: 103.8198 },
-    'Bangkok': { lat: 13.7563, lon: 100.5018 },
-    'Kuala Lumpur': { lat: 3.1390, lon: 101.6869 },
-    'Jakarta': { lat: -6.2088, lon: 106.8456 },
-    'Manila': { lat: 14.5995, lon: 120.9842 },
-    'Taipei': { lat: 25.0330, lon: 121.5654 },
-    'New Delhi': { lat: 28.6139, lon: 77.2090 },
-    'Mumbai': { lat: 19.0760, lon: 72.8777 },
-    'Karachi': { lat: 24.8607, lon: 67.0011 },
-    'Lahore': { lat: 31.5204, lon: 74.3587 },
-    'Kolkata': { lat: 22.5726, lon: 88.3639 },
-    'Chennai': { lat: 13.0827, lon: 80.2707 },
-    'Bangalore': { lat: 12.9716, lon: 77.5946 },
-    'Hyderabad': { lat: 17.3850, lon: 78.4867 },
-    'Ahmedabad': { lat: 23.0225, lon: 72.5714 },
-    'Pune': { lat: 18.5204, lon: 73.8567 },
-    'Surat': { lat: 21.1702, lon: 72.8311 },
 };
 
 // ================================================================
@@ -3476,7 +3375,7 @@ function showToast(msg, type = 'info') {
 }
 
 // ================================================================
-// 11. API ФУНКЦИИ (РАСШИРЕННЫЕ)
+// 11. API ФУНКЦИИ
 // ================================================================
 
 let API_CACHE = {};
@@ -3838,7 +3737,6 @@ async function getTeamForm(teamId, matches = 10) {
             form.avgScored = total > 0 ? form.goalsScored / total : 0;
             form.avgConceded = total > 0 ? form.goalsConceded / total : 0;
 
-            // Формируем строку формы (W=win, D=draw, L=loss)
             form.formString = form.lastMatches.map(m => {
                 if (m.result === 'win') return 'W';
                 if (m.result === 'draw') return 'D';
@@ -3855,7 +3753,7 @@ async function getTeamForm(teamId, matches = 10) {
 }
 
 // ================================================================
-// 12. ПОГОДНЫЕ ФУНКЦИИ (РАСШИРЕННЫЕ)
+// 12. ПОГОДНЫЕ ФУНКЦИИ
 // ================================================================
 
 async function getWeatherByCoords(lat, lon) {
@@ -4255,8 +4153,8 @@ async function checkApiStatus() {
         dot.className = 'dot offline';
         text.textContent = '❌ Нет подключения к API';
     }
-}   
-     
+}
+        
 // ================================================================
 // 14. ГЕНЕРАЦИЯ ПРОГНОЗОВ (ЗАГРУЗКА МАТЧЕЙ) - РАСШИРЕННАЯ
 // ================================================================
@@ -4338,7 +4236,7 @@ async function generatePredictions() {
                     console.log(`✅ Лига ${leagueId}: ${matches.length} матчей`);
                 }
 
-                await delay(300); // Задержка между запросами
+                await delay(300);
 
             } catch (error) {
                 console.warn(`⚠️ Ошибка загрузки лиги ${leagueId}:`, error);
@@ -4507,7 +4405,83 @@ function getDefaultMatches() {
 }
 
 // ================================================================
-// 15. ГЕНЕРАЦИЯ РЕКОМЕНДАЦИЙ (РАСШИРЕННАЯ) - ТУРБО-АНАЛИЗ
+// 15. НОРМАЛИЗАЦИЯ ВЕРОЯТНОСТЕЙ (ИСПРАВЛЕНИЕ ПРОТИВОРЕЧИЙ)
+// ================================================================
+
+function normalizeProbabilities(probBothScore, probOver25) {
+    // Логическая проверка: если ОЗ > 80%, то тотал > 2.5 не может быть меньше 30%
+    if (probBothScore > 0.8 && probOver25 < 0.3) {
+        probOver25 = Math.max(probOver25, 0.35);
+    }
+
+    // Если ОЗ < 20%, то тотал > 2.5 не может быть больше 40%
+    if (probBothScore < 0.2 && probOver25 > 0.4) {
+        probOver25 = Math.min(probOver25, 0.35);
+    }
+
+    // Если тотал > 2.5 > 70%, то ОЗ не может быть меньше 40%
+    if (probOver25 > 0.7 && probBothScore < 0.4) {
+        probBothScore = Math.max(probBothScore, 0.45);
+    }
+
+    // Если тотал < 2.5 > 70%, то ОЗ не может быть больше 50%
+    if (probOver25 < 0.3 && probBothScore > 0.5) {
+        probBothScore = Math.min(probBothScore, 0.45);
+    }
+
+    // Гарантируем, что вероятности в диапазоне [0.05, 0.95]
+    probBothScore = clamp(probBothScore, 0.05, 0.95);
+    probOver25 = clamp(probOver25, 0.05, 0.95);
+
+    return { probBothScore, probOver25 };
+}
+
+// ================================================================
+// 16. ПРОВЕРКА ЛОГИКИ РЕКОМЕНДАЦИИ
+// ================================================================
+
+function validateRecommendation(type, probBothScore, probOver25) {
+    // Если рекомендуют ОЗ - ДА, но вероятность ОЗ < 50% — это плохая рекомендация
+    if (type === 'ОЗ - ДА' && probBothScore < 0.5) {
+        return {
+            valid: false,
+            message: '⚠️ Низкая вероятность ОЗ (' + Math.round(probBothScore * 100) + '%), рекомендуется пересмотреть',
+            suggestedType: 'ОЗ - НЕТ'
+        };
+    }
+
+    // Если рекомендуют ОЗ - НЕТ, но вероятность ОЗ > 60% — это плохая рекомендация
+    if (type === 'ОЗ - НЕТ' && probBothScore > 0.6) {
+        return {
+            valid: false,
+            message: '⚠️ Высокая вероятность ОЗ (' + Math.round(probBothScore * 100) + '%), рекомендуется пересмотреть',
+            suggestedType: 'ОЗ - ДА'
+        };
+    }
+
+    // Если рекомендуют Тотал > 2.5, но вероятность < 45% — это плохая рекомендация
+    if (type === 'Тотал > 2.5' && probOver25 < 0.45) {
+        return {
+            valid: false,
+            message: '⚠️ Низкая вероятность тотала > 2.5 (' + Math.round(probOver25 * 100) + '%)',
+            suggestedType: 'Тотал < 2.5'
+        };
+    }
+
+    // Если рекомендуют Тотал < 2.5, но вероятность > 55% — это плохая рекомендация
+    if (type === 'Тотал < 2.5' && probOver25 > 0.55) {
+        return {
+            valid: false,
+            message: '⚠️ Высокая вероятность тотала > 2.5 (' + Math.round(probOver25 * 100) + '%)',
+            suggestedType: 'Тотал > 2.5'
+        };
+    }
+
+    return { valid: true, message: '✅ Рекомендация логична', suggestedType: null };
+}
+
+// ================================================================
+// 17. ГЕНЕРАЦИЯ РЕКОМЕНДАЦИЙ (РАСШИРЕННАЯ) - ТУРБО-АНАЛИЗ
 // ================================================================
 
 async function generateRecommendation(match) {
@@ -4644,9 +4618,7 @@ async function generateRecommendation(match) {
 
         // Корректировка по положению в таблице
         if (homeStanding) {
-            // Топ-4: выше xG
             if (homeStanding.rank <= 4) homeXG *= 1.1;
-            // Последние 3: ниже xG
             if (homeStanding.rank >= 18) homeXG *= 0.9;
         }
 
@@ -4690,8 +4662,15 @@ async function generateRecommendation(match) {
         probDraw /= sum;
         probAwayWin /= sum;
 
-        const probBothScore = 1 - Math.exp(-homeXG) * Math.exp(-awayXG);
-        const probOver25 = 1 - calculatePoissonDistribution((homeXG + awayXG) / 2).cumulative;
+        let probBothScore = 1 - Math.exp(-homeXG) * Math.exp(-awayXG);
+        let probOver25 = 1 - calculatePoissonDistribution((homeXG + awayXG) / 2).cumulative;
+
+        // ================================================================
+        // НОРМАЛИЗАЦИЯ ВЕРОЯТНОСТЕЙ (УБИРАЕМ ПРОТИВОРЕЧИЯ)
+        // ================================================================
+        const normalized = normalizeProbabilities(probBothScore, probOver25);
+        probBothScore = normalized.probBothScore;
+        probOver25 = normalized.probOver25;
 
         // 8. Определение лучшей ставки
         const betOptions = [
@@ -4714,6 +4693,20 @@ async function generateRecommendation(match) {
                 bestBet = option;
             }
         });
+
+        // ================================================================
+        // ПРОВЕРКА ЛОГИКИ РЕКОМЕНДАЦИИ
+        // ================================================================
+        if (bestBet) {
+            const validation = validateRecommendation(bestBet.type, probBothScore, probOver25);
+            if (!validation.valid && validation.suggestedType) {
+                const alternative = betOptions.find(o => o.type === validation.suggestedType);
+                if (alternative && alternative.ev > 0) {
+                    bestBet = alternative;
+                    console.log('🔄 Изменена рекомендация на: ' + alternative.type);
+                }
+            }
+        }
 
         // 9. Расчет Kelly
         const kellyFraction = CONFIG.RECOMMENDATIONS.KELLY_FRACTION || 0.25;
@@ -4812,14 +4805,14 @@ async function generateRecommendation(match) {
             reasoning.push(`📊 Лига низкорезультативная (средний тотал ${leagueStats.avgGoals.toFixed(1)})`);
         }
 
-        // Вероятности
-        if (probBothScore > 0.65) {
+        // Вероятности (после нормализации)
+        if (probBothScore > 0.6) {
             reasoning.push(`⚽ Высокая вероятность обоюдных голов (${Math.round(probBothScore * 100)}%)`);
         } else if (probBothScore < 0.35) {
             reasoning.push(`⚽ Низкая вероятность обоюдных голов (${Math.round(probBothScore * 100)}%)`);
         }
 
-        if (probOver25 > 0.6) {
+        if (probOver25 > 0.55) {
             reasoning.push(`📈 Вероятность тотала > 2.5 составляет ${Math.round(probOver25 * 100)}%`);
         } else if (probOver25 < 0.4) {
             reasoning.push(`📉 Вероятность тотала < 2.5 составляет ${Math.round((1 - probOver25) * 100)}%`);
@@ -4895,7 +4888,7 @@ async function generateRecommendation(match) {
 }
 
 // ================================================================
-// 16. ОТОБРАЖЕНИЕ РЕКОМЕНДАЦИЙ (РАСШИРЕННОЕ)
+// 18. ОТОБРАЖЕНИЕ РЕКОМЕНДАЦИЙ (РАСШИРЕННОЕ)
 // ================================================================
 
 function renderRecommendationCard(rec) {
@@ -4911,17 +4904,18 @@ function renderRecommendationCard(rec) {
     const weatherTemp = rec.weather ? `${rec.weather.temp}°C` : '—';
     const weatherDesc = rec.weather ? rec.weather.description : 'Нет данных';
 
-    // Форма команд в виде строки
     const homeFormStr = rec.stats.homeForm?.formString || '—';
     const awayFormStr = rec.stats.awayForm?.formString || '—';
 
-    // Положение в таблице
     const homePos = rec.standings?.home?.rank ? `${rec.standings.home.rank}-е место` : '—';
     const awayPos = rec.standings?.away?.rank ? `${rec.standings.away.rank}-е место` : '—';
 
-    // Травмы
     const homeInjuries = rec.injuries?.home?.filter(i => i.status === 'Out').slice(0, 3) || [];
     const awayInjuries = rec.injuries?.away?.filter(i => i.status === 'Out').slice(0, 3) || [];
+
+    // Ограничиваем проценты для отображения (не более 95%)
+    const bothScoreDisplay = Math.min(rec.stats.probBothScore, 95);
+    const over25Display = Math.min(rec.stats.probOver25, 95);
 
     return `
         <div class="recommendation-card" data-match-id="${rec.matchId}">
@@ -5016,8 +5010,8 @@ function renderRecommendationCard(rec) {
             <!-- СТАТИСТИКА -->
             <div style="display:flex;gap:10px;padding:6px 0;border-top:1px solid rgba(255,255,255,0.05);margin-top:4px;font-size:10px;color:#888;flex-wrap:wrap;">
                 <span>⚽ xG: ${rec.stats.homeXG.toFixed(2)} : ${rec.stats.awayXG.toFixed(2)}</span>
-                <span>📊 ОЗ: ${rec.stats.probBothScore}%</span>
-                <span>📈 Тотал > 2.5: ${rec.stats.probOver25}%</span>
+                <span>📊 ОЗ: ${bothScoreDisplay}%</span>
+                <span>📈 Тотал > 2.5: ${over25Display}%</span>
                 <span>📊 П1: ${rec.stats.probHomeWin}% | X: ${rec.stats.probDraw}% | П2: ${rec.stats.probAwayWin}%</span>
             </div>
 
@@ -5052,7 +5046,7 @@ function renderRecommendationCard(rec) {
 }
 
 // ================================================================
-// 17. СОХРАНЕНИЕ РЕКОМЕНДАЦИИ
+// 19. СОХРАНЕНИЕ РЕКОМЕНДАЦИИ
 // ================================================================
 
 function saveRecommendation(rec) {
@@ -5143,7 +5137,7 @@ function shareRecommendation(rec) {
 }
 
 // ================================================================
-// 18. ТОП РЕКОМЕНДАЦИИ
+// 20. ТОП РЕКОМЕНДАЦИИ
 // ================================================================
 
 async function renderTopRecommendations() {
@@ -5224,10 +5218,1077 @@ async function renderTopRecommendations() {
             </div>
         </div>
     `;
-}
-    
+}/ ================================================================
+// КВАНТУМ v8.0 - ПОЛНАЯ ИСПРАВЛЕННАЯ ВЕРСИЯ - ЧАСТЬ 3
 // ================================================================
-// 19. КАЛЕНДАРЬ
+
+// ================================================================
+// 14. ГЕНЕРАЦИЯ ПРОГНОЗОВ (ЗАГРУЗКА МАТЧЕЙ) - РАСШИРЕННАЯ
+// ================================================================
+
+async function generatePredictions() {
+    const apiKey = localStorage.getItem(APP_PREFIX + 'api_key');
+    if (!apiKey || apiKey === '') {
+        console.log('⚠️ API ключ не найден, используем тестовые матчи');
+        return getDefaultMatches();
+    }
+
+    try {
+        const today = new Date();
+        const dateStr = today.toISOString().split('T')[0];
+        let allMatches = [];
+
+        // Расширенный список лиг для загрузки
+        const leaguesToFetch = [
+            // ТОП-5
+            LEAGUE_IDS.PREMIER_LEAGUE,
+            LEAGUE_IDS.LA_LIGA,
+            LEAGUE_IDS.BUNDESLIGA,
+            LEAGUE_IDS.SERIE_A,
+            LEAGUE_IDS.LIGUE_1,
+            // Вторые дивизионы
+            LEAGUE_IDS.CHAMPIONSHIP,
+            LEAGUE_IDS.LA_LIGA_2,
+            LEAGUE_IDS.BUNDESLIGA_2,
+            LEAGUE_IDS.SERIE_B,
+            LEAGUE_IDS.LIGUE_2,
+            // Еврокубки
+            LEAGUE_IDS.CHAMPIONS_LEAGUE,
+            LEAGUE_IDS.EUROPA_LEAGUE,
+            LEAGUE_IDS.CONFERENCE_LEAGUE,
+            // Западная Европа
+            LEAGUE_IDS.EREDIVISIE,
+            LEAGUE_IDS.PRO_LEAGUE,
+            LEAGUE_IDS.PRIMEIRA,
+            LEAGUE_IDS.GREECE,
+            LEAGUE_IDS.TURKEY,
+            LEAGUE_IDS.SWITZERLAND,
+            LEAGUE_IDS.AUSTRIA,
+            LEAGUE_IDS.SCOTLAND,
+            // Восточная Европа
+            LEAGUE_IDS.RPL,
+            LEAGUE_IDS.CZECH,
+            LEAGUE_IDS.POLAND,
+            LEAGUE_IDS.UKRAINE,
+            LEAGUE_IDS.CROATIA,
+            LEAGUE_IDS.SERBIA,
+            LEAGUE_IDS.ROMANIA,
+            // Северная Европа
+            LEAGUE_IDS.DENMARK,
+            LEAGUE_IDS.NORWAY,
+            LEAGUE_IDS.SWEDEN,
+            // Кубки
+            LEAGUE_IDS.FA_CUP,
+            LEAGUE_IDS.COPA_DEL_REY,
+            LEAGUE_IDS.DFB_POKAL,
+            LEAGUE_IDS.COPPA_ITALIA,
+            LEAGUE_IDS.COUPE_DE_FRANCE,
+            LEAGUE_IDS.LEAGUE_CUP,
+        ];
+
+        console.log(`📡 Загрузка матчей из ${leaguesToFetch.length} лиг...`);
+
+        // Загружаем матчи с задержкой между запросами
+        for (const leagueId of leaguesToFetch) {
+            try {
+                const data = await fetchWithCache(
+                    `fixtures?league=${leagueId}&season=${CONFIG.CURRENT_SEASON}&date=${dateStr}`,
+                    {},
+                    CONFIG.CACHE.PREDICTIONS_TTL
+                );
+
+                if (data && data.response && data.response.length > 0) {
+                    const matches = data.response.map(m => processMatchData(m, leagueId));
+                    allMatches = allMatches.concat(matches);
+                    console.log(`✅ Лига ${leagueId}: ${matches.length} матчей`);
+                }
+
+                await delay(300);
+
+            } catch (error) {
+                console.warn(`⚠️ Ошибка загрузки лиги ${leagueId}:`, error);
+            }
+        }
+
+        // Если матчей нет, пробуем загрузить на завтра
+        if (allMatches.length === 0) {
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowStr = tomorrow.toISOString().split('T')[0];
+
+            console.log(`📡 Пробуем загрузить матчи на завтра (${tomorrowStr})...`);
+
+            for (const leagueId of leaguesToFetch.slice(0, 10)) {
+                try {
+                    const data = await fetchWithCache(
+                        `fixtures?league=${leagueId}&season=${CONFIG.CURRENT_SEASON}&date=${tomorrowStr}`,
+                        {},
+                        CONFIG.CACHE.PREDICTIONS_TTL
+                    );
+
+                    if (data && data.response && data.response.length > 0) {
+                        const matches = data.response.map(m => processMatchData(m, leagueId));
+                        allMatches = allMatches.concat(matches);
+                        console.log(`✅ Лига ${leagueId} (завтра): ${matches.length} матчей`);
+                    }
+                    await delay(300);
+                } catch (error) {
+                    console.warn(`⚠️ Ошибка загрузки лиги ${leagueId} (завтра):`, error);
+                }
+            }
+        }
+
+        // Если всё ещё нет матчей, используем тестовые
+        if (allMatches.length === 0) {
+            console.log('⚠️ Матчи не найдены, используем тестовые');
+            return getDefaultMatches();
+        }
+
+        // Сортируем по времени
+        allMatches.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+
+        console.log(`✅ Загружено ${allMatches.length} матчей`);
+        return allMatches;
+
+    } catch (error) {
+        console.error('❌ Ошибка загрузки матчей:', error);
+        return getDefaultMatches();
+    }
+}
+
+function processMatchData(match, leagueId) {
+    const homeTeam = match.teams.home.name;
+    const awayTeam = match.teams.away.name;
+    const status = match.fixture.status.short;
+
+    const leagueStats = LEAGUE_STATISTICS[leagueId] || { avgGoals: 2.6, ozPercent: 55 };
+    const avgGoals = leagueStats.avgGoals || 2.6;
+
+    let prediction = 'Тотал > 2.5';
+    let confidence = 60 + Math.floor(Math.random() * 30);
+
+    // Анализ дерби
+    if (isDerby(homeTeam, awayTeam)) {
+        confidence += 10;
+        prediction = Math.random() > 0.6 ? 'ОЗ - ДА' : 'Тотал > 2.5';
+    }
+
+    // Корректировка по статистике лиги
+    if (avgGoals > 3.0) {
+        confidence += 5;
+        if (Math.random() > 0.4) prediction = 'Тотал > 3.5';
+    } else if (avgGoals < 2.2) {
+        confidence -= 5;
+        if (Math.random() > 0.5) prediction = 'Тотал < 2.5';
+    }
+
+    // Получаем коэффициенты
+    let odds = 1.85;
+    if (match.odds && match.odds[0] && match.odds[0].values) {
+        const oddValue = match.odds[0].values[0]?.odd;
+        if (oddValue) odds = parseFloat(oddValue);
+    }
+
+    return {
+        id: match.fixture.id || Date.now() + Math.random() * 1000,
+        home: homeTeam,
+        away: awayTeam,
+        league: match.league.name || 'Лига',
+        leagueId: leagueId,
+        country: match.league.country || 'Мир',
+        startTime: new Date(match.fixture.date),
+        homeScore: match.goals?.home ?? null,
+        awayScore: match.goals?.away ?? null,
+        status: status === 'FT' ? 'finished' : (status === '1H' || status === '2H' ? 'live' : 'upcoming'),
+        prediction: prediction,
+        confidence: Math.min(95, Math.max(50, confidence)),
+        odds: odds,
+        total: avgGoals,
+        oz: Math.random() > 0.5,
+        isLive: status === '1H' || status === '2H',
+        actualOutcome: status === 'FT' ? (Math.random() > 0.5 ? 'win' : 'loss') : undefined,
+        leagueAvgGoals: avgGoals,
+        isDerby: isDerby(homeTeam, awayTeam),
+        homeTeamId: match.teams.home.id || null,
+        awayTeamId: match.teams.away.id || null,
+        venue: match.fixture.venue?.name || null,
+        city: match.fixture.venue?.city || null,
+        round: match.league.round || null,
+    };
+}
+
+function getDefaultMatches() {
+    const now = new Date();
+    const matches = [];
+
+    const defaultTeams = [
+        { home: 'Spartak Moscow', away: 'Zenit', league: 'РПЛ', leagueId: 90, country: 'Россия', time: 1 },
+        { home: 'CSKA Moscow', away: 'Dinamo Moscow', league: 'РПЛ', leagueId: 90, country: 'Россия', time: 3 },
+        { home: 'Real Madrid', away: 'Barcelona', league: 'Ла Лига', leagueId: 140, country: 'Испания', time: 5 },
+        { home: 'Bayern Munich', away: 'Borussia Dortmund', league: 'Бундеслига', leagueId: 78, country: 'Германия', time: 7 },
+        { home: 'Juventus', away: 'AC Milan', league: 'Серия А', leagueId: 135, country: 'Италия', time: 9 },
+        { home: 'PSG', away: 'Marseille', league: 'Лига 1', leagueId: 61, country: 'Франция', time: 11 },
+        { home: 'Ajax', away: 'Feyenoord', league: 'Эредивизи', leagueId: 88, country: 'Нидерланды', time: 2 },
+        { home: 'Anderlecht', away: 'Club Brugge', league: 'Про Лига', leagueId: 89, country: 'Бельгия', time: 4 },
+        { home: 'Liverpool', away: 'Manchester United', league: 'АПЛ', leagueId: 39, country: 'Англия', time: 6 },
+        { home: 'Celtic', away: 'Rangers', league: 'Премьер-лига', leagueId: 207, country: 'Шотландия', time: 8 },
+        { home: 'Benfica', away: 'Porto', league: 'Примейра', leagueId: 94, country: 'Португалия', time: 10 },
+        { home: 'Galatasaray', away: 'Fenerbahce', league: 'Суперлига', leagueId: 197, country: 'Турция', time: 12 },
+        { home: 'Olympiacos', away: 'Panathinaikos', league: 'Суперлига', leagueId: 203, country: 'Греция', time: 14 },
+        { home: 'Red Star', away: 'Partizan', league: 'Суперлига', leagueId: 288, country: 'Сербия', time: 16 },
+        { home: 'Slavia Prague', away: 'Sparta Prague', league: 'Лига 1', leagueId: 242, country: 'Чехия', time: 18 },
+    ];
+
+    defaultTeams.forEach((t, i) => {
+        const isDerbyMatch = isDerby(t.home, t.away);
+        matches.push({
+            id: i + 1,
+            home: t.home,
+            away: t.away,
+            league: t.league,
+            leagueId: t.leagueId,
+            country: t.country,
+            startTime: new Date(now.getTime() + t.time * 60 * 60 * 1000),
+            homeScore: null,
+            awayScore: null,
+            status: 'upcoming',
+            prediction: isDerbyMatch ? (Math.random() > 0.5 ? 'ОЗ - ДА' : 'Тотал > 2.5') : 'Тотал > 2.5',
+            confidence: 65 + Math.floor(Math.random() * 25),
+            odds: 1.75 + Math.random() * 0.25,
+            total: 2.5 + Math.random() * 0.5,
+            oz: Math.random() > 0.4,
+            isLive: false,
+            isDerby: isDerbyMatch,
+            leagueAvgGoals: 2.6,
+            homeTeamId: null,
+            awayTeamId: null,
+            venue: null,
+            city: null,
+            round: null,
+        });
+    });
+
+    return matches;
+}
+
+// ================================================================
+// 15. НОРМАЛИЗАЦИЯ ВЕРОЯТНОСТЕЙ (ИСПРАВЛЕНИЕ ПРОТИВОРЕЧИЙ)
+// ================================================================
+
+function normalizeProbabilities(probBothScore, probOver25) {
+    // Логическая проверка: если ОЗ > 80%, то тотал > 2.5 не может быть меньше 30%
+    if (probBothScore > 0.8 && probOver25 < 0.3) {
+        probOver25 = Math.max(probOver25, 0.35);
+    }
+
+    // Если ОЗ < 20%, то тотал > 2.5 не может быть больше 40%
+    if (probBothScore < 0.2 && probOver25 > 0.4) {
+        probOver25 = Math.min(probOver25, 0.35);
+    }
+
+    // Если тотал > 2.5 > 70%, то ОЗ не может быть меньше 40%
+    if (probOver25 > 0.7 && probBothScore < 0.4) {
+        probBothScore = Math.max(probBothScore, 0.45);
+    }
+
+    // Если тотал < 2.5 > 70%, то ОЗ не может быть больше 50%
+    if (probOver25 < 0.3 && probBothScore > 0.5) {
+        probBothScore = Math.min(probBothScore, 0.45);
+    }
+
+    // Гарантируем, что вероятности в диапазоне [0.05, 0.95]
+    probBothScore = clamp(probBothScore, 0.05, 0.95);
+    probOver25 = clamp(probOver25, 0.05, 0.95);
+
+    return { probBothScore, probOver25 };
+}
+
+// ================================================================
+// 16. ПРОВЕРКА ЛОГИКИ РЕКОМЕНДАЦИИ
+// ================================================================
+
+function validateRecommendation(type, probBothScore, probOver25) {
+    // Если рекомендуют ОЗ - ДА, но вероятность ОЗ < 50% — это плохая рекомендация
+    if (type === 'ОЗ - ДА' && probBothScore < 0.5) {
+        return {
+            valid: false,
+            message: '⚠️ Низкая вероятность ОЗ (' + Math.round(probBothScore * 100) + '%), рекомендуется пересмотреть',
+            suggestedType: 'ОЗ - НЕТ'
+        };
+    }
+
+    // Если рекомендуют ОЗ - НЕТ, но вероятность ОЗ > 60% — это плохая рекомендация
+    if (type === 'ОЗ - НЕТ' && probBothScore > 0.6) {
+        return {
+            valid: false,
+            message: '⚠️ Высокая вероятность ОЗ (' + Math.round(probBothScore * 100) + '%), рекомендуется пересмотреть',
+            suggestedType: 'ОЗ - ДА'
+        };
+    }
+
+    // Если рекомендуют Тотал > 2.5, но вероятность < 45% — это плохая рекомендация
+    if (type === 'Тотал > 2.5' && probOver25 < 0.45) {
+        return {
+            valid: false,
+            message: '⚠️ Низкая вероятность тотала > 2.5 (' + Math.round(probOver25 * 100) + '%)',
+            suggestedType: 'Тотал < 2.5'
+        };
+    }
+
+    // Если рекомендуют Тотал < 2.5, но вероятность > 55% — это плохая рекомендация
+    if (type === 'Тотал < 2.5' && probOver25 > 0.55) {
+        return {
+            valid: false,
+            message: '⚠️ Высокая вероятность тотала > 2.5 (' + Math.round(probOver25 * 100) + '%)',
+            suggestedType: 'Тотал > 2.5'
+        };
+    }
+
+    return { valid: true, message: '✅ Рекомендация логична', suggestedType: null };
+}
+
+// ================================================================
+// 17. ГЕНЕРАЦИЯ РЕКОМЕНДАЦИЙ (РАСШИРЕННАЯ) - ТУРБО-АНАЛИЗ
+// ================================================================
+
+async function generateRecommendation(match) {
+    if (!match) return null;
+
+    try {
+        // 1. Получаем статистику лиги
+        const leagueStats = await loadLeagueStatistics(match.leagueId || 39);
+
+        // 2. Получаем погоду
+        let weatherData = null;
+        let weatherImpact = null;
+
+        try {
+            const coords = getStadiumCoords(match.home);
+            if (coords) {
+                weatherData = await getWeatherByCoords(coords.lat, coords.lon);
+                if (weatherData) {
+                    weatherImpact = getWeatherImpact(weatherData);
+                }
+            }
+        } catch (e) {
+            console.warn('⚠️ Ошибка загрузки погоды:', e);
+        }
+
+        // 3. Получаем реальную форму команд (если есть ID)
+        let homeForm = null;
+        let awayForm = null;
+
+        if (match.homeTeamId) {
+            homeForm = await getTeamForm(match.homeTeamId, CONFIG.TEAM_ANALYSIS.FORM_MATCHES || 10);
+        }
+        if (match.awayTeamId) {
+            awayForm = await getTeamForm(match.awayTeamId, CONFIG.TEAM_ANALYSIS.FORM_MATCHES || 10);
+        }
+
+        // Если форма не загружена, используем имитацию
+        if (!homeForm) {
+            homeForm = {
+                wins: 3 + Math.floor(Math.random() * 3),
+                draws: 1 + Math.floor(Math.random() * 2),
+                losses: 1 + Math.floor(Math.random() * 2),
+                avgScored: 1.2 + Math.random() * 0.8,
+                avgConceded: 0.8 + Math.random() * 0.6,
+                winRate: 50 + Math.random() * 30,
+                formString: 'WDWLW',
+                homeWins: 2 + Math.floor(Math.random() * 2),
+                homeDraws: 1 + Math.floor(Math.random() * 1),
+                homeLosses: 0 + Math.floor(Math.random() * 2),
+                cleanSheets: 2 + Math.floor(Math.random() * 2),
+                bothScored: 4 + Math.floor(Math.random() * 3),
+                over25: 5 + Math.floor(Math.random() * 3),
+            };
+        }
+
+        if (!awayForm) {
+            awayForm = {
+                wins: 2 + Math.floor(Math.random() * 3),
+                draws: 1 + Math.floor(Math.random() * 2),
+                losses: 2 + Math.floor(Math.random() * 2),
+                avgScored: 0.9 + Math.random() * 0.7,
+                avgConceded: 1.1 + Math.random() * 0.7,
+                winRate: 40 + Math.random() * 30,
+                formString: 'LDWLW',
+                awayWins: 1 + Math.floor(Math.random() * 2),
+                awayDraws: 1 + Math.floor(Math.random() * 2),
+                awayLosses: 2 + Math.floor(Math.random() * 2),
+                cleanSheets: 1 + Math.floor(Math.random() * 2),
+                bothScored: 3 + Math.floor(Math.random() * 3),
+                over25: 4 + Math.floor(Math.random() * 3),
+            };
+        }
+
+        // 4. Получаем положение в таблице
+        let homeStanding = null;
+        let awayStanding = null;
+
+        if (match.leagueId) {
+            try {
+                const standings = await getStandings(match.leagueId);
+                if (standings && standings.length > 0) {
+                    const homeTeamName = match.home;
+                    const awayTeamName = match.away;
+
+                    homeStanding = standings.find(s =>
+                        s.team.name.toLowerCase().includes(homeTeamName.toLowerCase()) ||
+                        homeTeamName.toLowerCase().includes(s.team.name.toLowerCase())
+                    );
+
+                    awayStanding = standings.find(s =>
+                        s.team.name.toLowerCase().includes(awayTeamName.toLowerCase()) ||
+                        awayTeamName.toLowerCase().includes(s.team.name.toLowerCase())
+                    );
+                }
+            } catch (e) {
+                console.warn('⚠️ Ошибка получения таблицы:', e);
+            }
+        }
+
+        // 5. Получаем травмы (если есть ID)
+        let homeInjuries = [];
+        let awayInjuries = [];
+
+        if (match.homeTeamId) {
+            homeInjuries = await getTeamInjuries(match.homeTeamId);
+        }
+        if (match.awayTeamId) {
+            awayInjuries = await getTeamInjuries(match.awayTeamId);
+        }
+
+        // 6. Расчет xG с учетом всех факторов
+        let homeXG = homeForm.avgScored * 1.1;
+        let awayXG = awayForm.avgScored * 0.9;
+
+        // Преимущество домашнего поля
+        homeXG *= CONFIG.TEAM_ANALYSIS.HOME_WEIGHT || 1.15;
+
+        // Дерби повышает xG
+        if (match.isDerby) {
+            homeXG *= 1.15;
+            awayXG *= 1.15;
+        }
+
+        // Влияние погоды
+        if (weatherImpact) {
+            homeXG *= (1 + weatherImpact.goalsImpact / 100);
+            awayXG *= (1 + weatherImpact.goalsImpact / 100);
+        }
+
+        // Фактор лиги
+        const leagueFactor = (leagueStats.avgGoals || 2.6) / 2.6;
+        homeXG *= leagueFactor;
+        awayXG *= leagueFactor;
+
+        // Корректировка по положению в таблице
+        if (homeStanding) {
+            if (homeStanding.rank <= 4) homeXG *= 1.1;
+            if (homeStanding.rank >= 18) homeXG *= 0.9;
+        }
+
+        if (awayStanding) {
+            if (awayStanding.rank <= 4) awayXG *= 1.1;
+            if (awayStanding.rank >= 18) awayXG *= 0.9;
+        }
+
+        homeXG = Math.round(homeXG * 100) / 100;
+        awayXG = Math.round(awayXG * 100) / 100;
+
+        // 7. Расчет вероятностей через распределение Пуассона
+        const poissonHome = calculatePoissonDistribution(homeXG);
+        const poissonAway = calculatePoissonDistribution(awayXG);
+
+        let probHomeWin = 0;
+        let probDraw = 0;
+        let probAwayWin = 0;
+
+        for (let i = 0; i <= 6; i++) {
+            for (let j = 0; j <= 6; j++) {
+                const prob = poissonHome.distribution[i].probability * poissonAway.distribution[j].probability;
+                if (i > j) probHomeWin += prob;
+                else if (i === j) probDraw += prob;
+                else probAwayWin += prob;
+            }
+        }
+
+        // Корректировка с учетом формы
+        const homeWeight = 0.5 + (homeForm.winRate / 200);
+        const awayWeight = 0.5 + (awayForm.winRate / 200);
+        const totalWeight = homeWeight + awayWeight;
+
+        probHomeWin = probHomeWin * (homeWeight / totalWeight) * 1.1;
+        probAwayWin = probAwayWin * (awayWeight / totalWeight) * 1.1;
+        probDraw = 1 - probHomeWin - probAwayWin;
+
+        // Нормализация
+        const sum = probHomeWin + probDraw + probAwayWin;
+        probHomeWin /= sum;
+        probDraw /= sum;
+        probAwayWin /= sum;
+
+        let probBothScore = 1 - Math.exp(-homeXG) * Math.exp(-awayXG);
+        let probOver25 = 1 - calculatePoissonDistribution((homeXG + awayXG) / 2).cumulative;
+
+        // ================================================================
+        // НОРМАЛИЗАЦИЯ ВЕРОЯТНОСТЕЙ (УБИРАЕМ ПРОТИВОРЕЧИЯ)
+        // ================================================================
+        const normalized = normalizeProbabilities(probBothScore, probOver25);
+        probBothScore = normalized.probBothScore;
+        probOver25 = normalized.probOver25;
+
+        // 8. Определение лучшей ставки
+        const betOptions = [
+            { type: 'Победа хозяев', prob: probHomeWin, odds: match.odds * 0.95 || 1.75 },
+            { type: 'Ничья', prob: probDraw, odds: match.odds * 0.85 || 1.65 },
+            { type: 'Победа гостей', prob: probAwayWin, odds: match.odds * 0.90 || 1.70 },
+            { type: 'ОЗ - ДА', prob: probBothScore, odds: match.odds * 1.05 || 1.85 },
+            { type: 'ОЗ - НЕТ', prob: 1 - probBothScore, odds: match.odds * 0.95 || 1.75 },
+            { type: 'Тотал > 2.5', prob: probOver25, odds: match.odds || 1.85 },
+            { type: 'Тотал < 2.5', prob: 1 - probOver25, odds: match.odds * 0.90 || 1.70 },
+        ];
+
+        let bestEV = 0;
+        let bestBet = null;
+
+        betOptions.forEach(option => {
+            const ev = (option.prob * option.odds) - 1;
+            if (ev > bestEV) {
+                bestEV = ev;
+                bestBet = option;
+            }
+        });
+
+        // ================================================================
+        // ПРОВЕРКА ЛОГИКИ РЕКОМЕНДАЦИИ
+        // ================================================================
+        if (bestBet) {
+            const validation = validateRecommendation(bestBet.type, probBothScore, probOver25);
+            if (!validation.valid && validation.suggestedType) {
+                const alternative = betOptions.find(o => o.type === validation.suggestedType);
+                if (alternative && alternative.ev > 0) {
+                    bestBet = alternative;
+                    console.log('🔄 Изменена рекомендация на: ' + alternative.type);
+                }
+            }
+        }
+
+        // 9. Расчет Kelly
+        const kellyFraction = CONFIG.RECOMMENDATIONS.KELLY_FRACTION || 0.25;
+        let kelly = 0;
+        if (bestBet) {
+            kelly = (bestBet.prob * bestBet.odds - 1) / (bestBet.odds - 1);
+            kelly = clamp(kelly * kellyFraction, CONFIG.RECOMMENDATIONS.MIN_STAKE / 100, CONFIG.RECOMMENDATIONS.MAX_STAKE / 100);
+        }
+
+        // 10. Уровень риска
+        let riskLevel = 'low';
+        const confidence = Math.round(clamp(bestBet ? bestBet.prob * 100 : 50, 30, 95));
+
+        if (confidence >= 75 && bestEV > 0.1) riskLevel = 'low';
+        else if (confidence >= 60 && bestEV > 0.05) riskLevel = 'medium';
+        else if (confidence >= 50 && bestEV > 0.02) riskLevel = 'medium';
+        else riskLevel = 'high';
+
+        // 11. Расширенное обоснование
+        const reasoning = [];
+
+        // xG анализ
+        if (homeXG > awayXG + 0.3) {
+            reasoning.push(`🏠 ${match.home} имеет значительное преимущество по xG (${homeXG.toFixed(2)} vs ${awayXG.toFixed(2)})`);
+        } else if (awayXG > homeXG + 0.3) {
+            reasoning.push(`✈️ ${match.away} имеет преимущество по xG (${awayXG.toFixed(2)} vs ${homeXG.toFixed(2)})`);
+        } else {
+            reasoning.push(`⚖️ xG команд близки (${homeXG.toFixed(2)} : ${awayXG.toFixed(2)})`);
+        }
+
+        // Форма
+        if (homeForm.winRate > 60) {
+            reasoning.push(`🔥 ${match.home} в отличной форме (${Math.round(homeForm.winRate)}% побед, ${homeForm.formString || '—'})`);
+        } else if (homeForm.winRate < 30) {
+            reasoning.push(`⚠️ ${match.home} в плохой форме (${Math.round(homeForm.winRate)}% побед)`);
+        }
+
+        if (awayForm.winRate > 60) {
+            reasoning.push(`🔥 ${match.away} в отличной форме (${Math.round(awayForm.winRate)}% побед, ${awayForm.formString || '—'})`);
+        } else if (awayForm.winRate < 30) {
+            reasoning.push(`⚠️ ${match.away} в плохой форме (${Math.round(awayForm.winRate)}% побед)`);
+        }
+
+        // Положение в таблице
+        if (homeStanding) {
+            reasoning.push(`📊 ${match.home} на ${homeStanding.rank} месте (${homeStanding.points || 0} очков)`);
+        }
+        if (awayStanding) {
+            reasoning.push(`📊 ${match.away} на ${awayStanding.rank} месте (${awayStanding.points || 0} очков)`);
+        }
+
+        // Дерби
+        if (match.isDerby) {
+            reasoning.push('⚔️ Дерби! Ожидайте повышенной мотивации и интенсивности');
+        }
+
+        // Мотивация (на основе таблицы)
+        if (homeStanding && homeStanding.rank <= 4) {
+            reasoning.push(`🎯 ${match.home} борется за место в ЛЧ (${homeStanding.rank}-е место)`);
+        } else if (homeStanding && homeStanding.rank >= 17) {
+            reasoning.push(`🔥 ${match.home} борется за выживание (${homeStanding.rank}-е место)`);
+        }
+
+        if (awayStanding && awayStanding.rank <= 4) {
+            reasoning.push(`🎯 ${match.away} борется за место в ЛЧ (${awayStanding.rank}-е место)`);
+        } else if (awayStanding && awayStanding.rank >= 17) {
+            reasoning.push(`🔥 ${match.away} борется за выживание (${awayStanding.rank}-е место)`);
+        }
+
+        // Травмы
+        if (homeInjuries && homeInjuries.length > 0) {
+            const keyInjuries = homeInjuries.filter(i => i.status === 'Out').slice(0, 2);
+            if (keyInjuries.length > 0) {
+                reasoning.push(`🤕 У ${match.home} травмы: ${keyInjuries.map(i => i.player).join(', ')}`);
+            }
+        }
+
+        if (awayInjuries && awayInjuries.length > 0) {
+            const keyInjuries = awayInjuries.filter(i => i.status === 'Out').slice(0, 2);
+            if (keyInjuries.length > 0) {
+                reasoning.push(`🤕 У ${match.away} травмы: ${keyInjuries.map(i => i.player).join(', ')}`);
+            }
+        }
+
+        // Погода
+        if (weatherImpact && weatherImpact.goalsImpact < 0) {
+            reasoning.push(`🌤️ ${weatherImpact.reasoning[0] || 'Погода влияет на игру'}`);
+        } else if (weatherImpact && weatherImpact.goalsImpact > 0) {
+            reasoning.push(`☀️ ${weatherImpact.reasoning[0] || 'Отличные условия для футбола'}`);
+        }
+
+        // Статистика лиги
+        if (leagueStats.avgGoals > 3.0) {
+            reasoning.push(`📊 Лига результативная (средний тотал ${leagueStats.avgGoals.toFixed(1)})`);
+        } else if (leagueStats.avgGoals < 2.2) {
+            reasoning.push(`📊 Лига низкорезультативная (средний тотал ${leagueStats.avgGoals.toFixed(1)})`);
+        }
+
+        // Вероятности (после нормализации)
+        if (probBothScore > 0.6) {
+            reasoning.push(`⚽ Высокая вероятность обоюдных голов (${Math.round(probBothScore * 100)}%)`);
+        } else if (probBothScore < 0.35) {
+            reasoning.push(`⚽ Низкая вероятность обоюдных голов (${Math.round(probBothScore * 100)}%)`);
+        }
+
+        if (probOver25 > 0.55) {
+            reasoning.push(`📈 Вероятность тотала > 2.5 составляет ${Math.round(probOver25 * 100)}%`);
+        } else if (probOver25 < 0.4) {
+            reasoning.push(`📉 Вероятность тотала < 2.5 составляет ${Math.round((1 - probOver25) * 100)}%`);
+        }
+
+        if (reasoning.length === 0) {
+            reasoning.push('📊 Анализ на основе статистики и текущей формы команд');
+        }
+
+        // 12. Альтернативы
+        const alternatives = betOptions
+            .filter(o => o.type !== bestBet?.type && o.ev > 0.02)
+            .slice(0, 2)
+            .map(o => ({
+                type: o.type,
+                confidence: Math.round(o.prob * 100),
+                stake: Math.round(clamp((o.prob * o.odds - 1) / (o.odds - 1) * kellyFraction * 100, 1, 8)),
+                risk: o.prob > 0.6 ? 'low' : (o.prob > 0.45 ? 'medium' : 'high'),
+            }));
+
+        // 13. Формирование результата
+        return {
+            match: `${match.home} vs ${match.away}`,
+            homeTeam: match.home,
+            awayTeam: match.away,
+            league: match.league,
+            leagueId: match.leagueId,
+            date: match.startTime,
+            dateStr: formatDate(match.startTime),
+            venue: match.venue || null,
+            city: match.city || null,
+            round: match.round || null,
+            recommendation: {
+                type: bestBet ? bestBet.type : 'Тотал > 2.5',
+                odds: bestBet ? bestBet.odds : 1.85,
+                confidence: confidence,
+                stake: Math.round(kelly * 100),
+                risk: riskLevel,
+                ev: Math.round(bestEV * 1000) / 10,
+                reasoning: reasoning,
+                alternatives: alternatives,
+            },
+            stats: {
+                homeXG: homeXG,
+                awayXG: awayXG,
+                homeForm: homeForm,
+                awayForm: awayForm,
+                probHomeWin: Math.round(probHomeWin * 100),
+                probDraw: Math.round(probDraw * 100),
+                probAwayWin: Math.round(probAwayWin * 100),
+                probBothScore: Math.round(probBothScore * 100),
+                probOver25: Math.round(probOver25 * 100),
+            },
+            standings: {
+                home: homeStanding,
+                away: awayStanding,
+            },
+            injuries: {
+                home: homeInjuries,
+                away: awayInjuries,
+            },
+            weather: weatherData,
+            weatherImpact: weatherImpact,
+            isDerby: match.isDerby || false,
+            matchId: match.id,
+            leagueStats: leagueStats,
+        };
+
+    } catch (error) {
+        console.error('❌ Ошибка генерации рекомендации:', error);
+        return null;
+    }
+}
+
+// ================================================================
+// 18. ОТОБРАЖЕНИЕ РЕКОМЕНДАЦИЙ (РАСШИРЕННОЕ)
+// ================================================================
+
+function renderRecommendationCard(rec) {
+    if (!rec) return '';
+
+    const riskLabels = {
+        low: 'Низкий',
+        medium: 'Средний',
+        high: 'Высокий',
+    };
+
+    const weatherEmoji = rec.weather ? getWeatherEmoji(rec.weather.condition) : '🌤️';
+    const weatherTemp = rec.weather ? `${rec.weather.temp}°C` : '—';
+    const weatherDesc = rec.weather ? rec.weather.description : 'Нет данных';
+
+    const homeFormStr = rec.stats.homeForm?.formString || '—';
+    const awayFormStr = rec.stats.awayForm?.formString || '—';
+
+    const homePos = rec.standings?.home?.rank ? `${rec.standings.home.rank}-е место` : '—';
+    const awayPos = rec.standings?.away?.rank ? `${rec.standings.away.rank}-е место` : '—';
+
+    const homeInjuries = rec.injuries?.home?.filter(i => i.status === 'Out').slice(0, 3) || [];
+    const awayInjuries = rec.injuries?.away?.filter(i => i.status === 'Out').slice(0, 3) || [];
+
+    // Ограничиваем проценты для отображения (не более 95%)
+    const bothScoreDisplay = Math.min(rec.stats.probBothScore, 95);
+    const over25Display = Math.min(rec.stats.probOver25, 95);
+
+    return `
+        <div class="recommendation-card" data-match-id="${rec.matchId}">
+            <div class="match-header">
+                <div class="match-teams">${sanitizeHTML(rec.match)}</div>
+                <div class="match-time">${rec.dateStr}</div>
+            </div>
+            <div class="match-league">🏆 ${rec.league} ${rec.isDerby ? '· ⚔️ Дерби' : ''} ${rec.round ? `· ${rec.round}` : ''}</div>
+
+            <!-- ОСНОВНАЯ РЕКОМЕНДАЦИЯ -->
+            <div class="recommendation-box">
+                <div class="item">
+                    <span class="label">🎯 Ставка</span>
+                    <span class="value primary">${rec.recommendation.type}</span>
+                </div>
+                <div class="item">
+                    <span class="label">📊 Уверенность</span>
+                    <span class="value highlight">${rec.recommendation.confidence}%</span>
+                </div>
+                <div class="item">
+                    <span class="label">💰 Размер</span>
+                    <span class="value" style="color:#6C63FF;">${rec.recommendation.stake}%</span>
+                </div>
+                <div class="item">
+                    <span class="label">⚡ Риск</span>
+                    <span class="value risk-${rec.recommendation.risk}">${riskLabels[rec.recommendation.risk]}</span>
+                </div>
+                <div class="item">
+                    <span class="label">📈 Коэф</span>
+                    <span class="value">${rec.recommendation.odds.toFixed(2)}</span>
+                </div>
+                <div class="item">
+                    <span class="label">💰 EV</span>
+                    <span class="value" style="color:${rec.recommendation.ev > 5 ? '#2ecc71' : '#f1c40f'};">${rec.recommendation.ev}%</span>
+                </div>
+            </div>
+
+            <!-- ТАБЛИЦА -->
+            <div class="standings-grid" style="margin:4px 0;">
+                <div class="stand-item">
+                    <span class="pos">${homePos}</span>
+                    <span class="team">🏠 ${sanitizeHTML(rec.homeTeam)}</span>
+                    <span class="points">${rec.standings?.home?.points || 0} очков</span>
+                </div>
+                <div class="stand-item">
+                    <span class="pos">${awayPos}</span>
+                    <span class="team">✈️ ${sanitizeHTML(rec.awayTeam)}</span>
+                    <span class="points">${rec.standings?.away?.points || 0} очков</span>
+                </div>
+            </div>
+
+            <!-- ТРАВМЫ -->
+            ${homeInjuries.length > 0 || awayInjuries.length > 0 ? `
+                <div class="injuries-list" style="margin:4px 0;">
+                    ${homeInjuries.map(i => `
+                        <div class="injury-item danger">
+                            <span class="status">🚑</span>
+                            <span class="player">${sanitizeHTML(i.player)}</span>
+                            <span class="detail">${i.reason || 'Травма'} ${i.status === 'Out' ? '❌' : '⚠️'}</span>
+                        </div>
+                    `).join('')}
+                    ${awayInjuries.map(i => `
+                        <div class="injury-item danger">
+                            <span class="status">🚑</span>
+                            <span class="player">${sanitizeHTML(i.player)}</span>
+                            <span class="detail">${i.reason || 'Травма'} ${i.status === 'Out' ? '❌' : '⚠️'}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            ` : ''}
+
+            <!-- ФОРМА -->
+            <div style="display:flex;gap:10px;padding:4px 0;font-size:10px;color:#888;">
+                <span>📊 Форма: 🏠 ${homeFormStr} | ✈️ ${awayFormStr}</span>
+            </div>
+
+            <!-- ОБОСНОВАНИЕ -->
+            <div class="recommendation-reasoning">
+                ${rec.recommendation.reasoning.map(r => `<div class="reason"><span class="icon">•</span> ${r}</div>`).join('')}
+            </div>
+
+            <!-- АЛЬТЕРНАТИВЫ -->
+            ${rec.recommendation.alternatives.length > 0 ? `
+                <div class="recommendation-alternatives">
+                    <span style="font-size:10px;color:#888;">🔄 Альтернативы:</span>
+                    ${rec.recommendation.alternatives.map(alt => `
+                        <span class="alt">${alt.type} <span class="stake">${alt.stake}%</span></span>
+                    `).join('')}
+                </div>
+            ` : ''}
+
+            <!-- СТАТИСТИКА -->
+            <div style="display:flex;gap:10px;padding:6px 0;border-top:1px solid rgba(255,255,255,0.05);margin-top:4px;font-size:10px;color:#888;flex-wrap:wrap;">
+                <span>⚽ xG: ${rec.stats.homeXG.toFixed(2)} : ${rec.stats.awayXG.toFixed(2)}</span>
+                <span>📊 ОЗ: ${bothScoreDisplay}%</span>
+                <span>📈 Тотал > 2.5: ${over25Display}%</span>
+                <span>📊 П1: ${rec.stats.probHomeWin}% | X: ${rec.stats.probDraw}% | П2: ${rec.stats.probAwayWin}%</span>
+            </div>
+
+            <!-- ПОГОДА -->
+            <div class="weather-section">
+                <div class="weather-main">
+                    <span class="weather-icon">${weatherEmoji}</span>
+                    <span class="weather-temp">${weatherTemp}</span>
+                    <span class="weather-desc">${weatherDesc}</span>
+                </div>
+                ${rec.weatherImpact ? `
+                    <div class="weather-impact">
+                        ${rec.weatherImpact.reasoning.map(r => `<span class="tag">${r}</span>`).join('')}
+                    </div>
+                ` : ''}
+            </div>
+
+            <!-- КНОПКИ -->
+            <div class="recommendation-actions">
+                <button class="btn-accept" onclick="saveRecommendation(${JSON.stringify(rec).replace(/"/g, '&quot;')})">
+                    💾 Сохранить
+                </button>
+                <button class="btn-share" onclick="shareRecommendation(${JSON.stringify(rec).replace(/"/g, '&quot;')})">
+                    📤
+                </button>
+                <button class="btn-details" onclick="showFullAnalysis(${rec.matchId})">
+                    📋
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+// ================================================================
+// 19. СОХРАНЕНИЕ РЕКОМЕНДАЦИИ
+// ================================================================
+
+function saveRecommendation(rec) {
+    if (!rec) {
+        showToast('❌ Нет данных для сохранения', 'error');
+        return;
+    }
+
+    const bet = {
+        id: Date.now() + Math.random() * 1000,
+        date: new Date().toISOString(),
+        match: rec.match,
+        type: rec.recommendation.type.includes('Тотал') ? 'total' :
+            rec.recommendation.type.includes('ОЗ') ? 'oz' : 'fora',
+        prediction: rec.recommendation.type,
+        value: rec.recommendation.type,
+        confidence: rec.recommendation.confidence,
+        odds: rec.recommendation.odds,
+        ev: rec.recommendation.ev / 100,
+        stake: rec.recommendation.stake,
+        outcome: 'pending',
+        resultText: '⏳ Ожидание',
+        homeTeam: rec.homeTeam,
+        awayTeam: rec.awayTeam,
+        league: rec.league,
+        homeXG: rec.stats.homeXG,
+        awayXG: rec.stats.awayXG,
+        isDerby: rec.isDerby,
+        weather: rec.weather ? `${rec.weather.temp}°C, ${rec.weather.description}` : null,
+        recommendation: true,
+        reasoning: rec.recommendation.reasoning,
+        risk: rec.recommendation.risk,
+        standings: rec.standings,
+        injuries: rec.injuries,
+    };
+
+    state.bets.unshift(bet);
+    localStorage.setItem(APP_PREFIX + 'bets', JSON.stringify(state.bets));
+
+    renderBetHistory();
+    renderHistory();
+    renderStats();
+    renderDashboard();
+    updateAIStatus();
+
+    showToast(`✅ Рекомендация сохранена! (${rec.recommendation.type})`, 'success');
+}
+
+function shareRecommendation(rec) {
+    if (!rec) return;
+
+    const text = `🎯 РЕКОМЕНДАЦИЯ КВАНТУМ v8.0\n\n` +
+        `⚽ ${rec.match}\n` +
+        `📅 ${rec.dateStr}\n` +
+        `🏆 ${rec.league}\n\n` +
+        `📊 СТАВКА: ${rec.recommendation.type}\n` +
+        `📈 Уверенность: ${rec.recommendation.confidence}%\n` +
+        `💰 Размер: ${rec.recommendation.stake}% банка\n` +
+        `⚡ Риск: ${rec.recommendation.risk}\n` +
+        `📈 Коэф: ${rec.recommendation.odds.toFixed(2)}\n` +
+        `💰 EV: ${rec.recommendation.ev}%\n\n` +
+        `📋 ОБОСНОВАНИЕ:\n${rec.recommendation.reasoning.map(r => `• ${r}`).join('\n')}\n\n` +
+        `⚽ xG: ${rec.stats.homeXG.toFixed(2)} : ${rec.stats.awayXG.toFixed(2)}\n` +
+        `📊 ОЗ: ${rec.stats.probBothScore}% | Тотал > 2.5: ${rec.stats.probOver25}%\n` +
+        `📊 П1: ${rec.stats.probHomeWin}% | X: ${rec.stats.probDraw}% | П2: ${rec.stats.probAwayWin}%\n` +
+        `${rec.standings?.home ? `🏠 ${rec.homeTeam}: ${rec.standings.home.rank}-е место (${rec.standings.home.points} очков)` : ''}\n` +
+        `${rec.standings?.away ? `✈️ ${rec.awayTeam}: ${rec.standings.away.rank}-е место (${rec.standings.away.points} очков)` : ''}\n` +
+        `${rec.injuries?.home?.length > 0 ? `🤕 ${rec.homeTeam}: ${rec.injuries.home.filter(i => i.status === 'Out').map(i => i.player).join(', ')}` : ''}\n` +
+        `${rec.injuries?.away?.length > 0 ? `🤕 ${rec.awayTeam}: ${rec.injuries.away.filter(i => i.status === 'Out').map(i => i.player).join(', ')}` : ''}\n\n` +
+        `⚛️ Квантум v8.0 - Рекомендательная система`;
+
+    if (navigator.share) {
+        navigator.share({ title: '🎯 Рекомендация Квантум v8.0', text: text })
+            .catch(() => {});
+    } else {
+        navigator.clipboard?.writeText(text).then(() => {
+            showToast('✅ Рекомендация скопирована!', 'success');
+        }).catch(() => {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            showToast('✅ Рекомендация скопирована!', 'success');
+        });
+    }
+}
+
+// ================================================================
+// 20. ТОП РЕКОМЕНДАЦИИ
+// ================================================================
+
+async function renderTopRecommendations() {
+    const container = document.getElementById('topRecommendationsContainer');
+    if (!container) return;
+
+    const matches = state.predictions || getDefaultMatches();
+
+    const now = new Date();
+    const upcoming = matches.filter(m =>
+        m.status !== 'finished' &&
+        new Date(m.startTime) > now &&
+        new Date(m.startTime) <= new Date(now.getTime() + 48 * 60 * 60 * 1000)
+    );
+
+    if (upcoming.length === 0) {
+        container.innerHTML = `
+            <div class="glass-card">
+                <div class="card-title">
+                    🏆 ТОП-3 РЕКОМЕНДАЦИИ
+                    <span class="badge">Нет матчей</span>
+                </div>
+                <div style="text-align:center;color:#555;padding:16px 0;font-size:13px;">
+                    🔮 Скоро появятся новые матчи
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    const recommendations = [];
+    const matchesToAnalyze = upcoming.slice(0, 10);
+
+    for (const match of matchesToAnalyze) {
+        try {
+            const rec = await generateRecommendation(match);
+            if (rec && rec.recommendation.confidence >= 55) {
+                recommendations.push(rec);
+            }
+            await delay(150);
+        } catch (e) {
+            console.warn('⚠️ Ошибка генерации рекомендации:', e);
+        }
+    }
+
+    recommendations.sort((a, b) => {
+        const scoreA = a.recommendation.confidence * (1 + a.recommendation.ev / 100);
+        const scoreB = b.recommendation.confidence * (1 + b.recommendation.ev / 100);
+        return scoreB - scoreA;
+    });
+
+    const top = recommendations.slice(0, 3);
+
+    if (top.length === 0) {
+        container.innerHTML = `
+            <div class="glass-card">
+                <div class="card-title">
+                    🏆 ТОП-3 РЕКОМЕНДАЦИИ
+                    <span class="badge">Нет данных</span>
+                </div>
+                <div style="text-align:center;color:#555;padding:16px 0;font-size:13px;">
+                    ⏳ Нет рекомендаций с высокой уверенностью
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = `
+        <div class="glass-card" style="border-color: rgba(108, 99, 255, 0.2);">
+            <div class="card-title">
+                🏆 ТОП-3 РЕКОМЕНДАЦИИ
+                <span class="badge">🔥 ${top.length}</span>
+            </div>
+            ${top.map(rec => renderRecommendationCard(rec)).join('')}
+            <div style="font-size:9px;color:#555;text-align:center;margin-top:4px;">
+                💡 Нажми "Сохранить" чтобы добавить в историю
+            </div>
+        </div>
+    `;
+} 
+
+// ================================================================
+// 21. КАЛЕНДАРЬ
 // ================================================================
 
 function renderCalendar() {
@@ -5260,7 +6321,6 @@ function renderCalendar() {
         const dayName = dayNames[d.getDay() === 0 ? 6 : d.getDay() - 1];
         const dateStr = formatDateShort(d);
 
-        // Проверяем, есть ли матчи на этот день
         const hasMatches = state.predictions?.some(m => {
             const mDate = new Date(m.startTime);
             mDate.setHours(0, 0, 0, 0);
@@ -5503,7 +6563,7 @@ async function showMatchRecommendation(matchId) {
 }
 
 // ================================================================
-// 20. РАСЧЕТЫ (ОСНОВНЫЕ)
+// 22. РАСЧЕТЫ (ОСНОВНЫЕ)
 // ================================================================
 
 function updateSum() {
@@ -5650,7 +6710,7 @@ function calculateValueBet(home, away, mode, confidence) {
 }
 
 // ================================================================
-// 21. AI ПРОГНОЗ
+// 23. AI ПРОГНОЗ
 // ================================================================
 
 async function generateUltimatePredictionExtended() {
@@ -5730,7 +6790,7 @@ async function generateUltimatePredictionExtended() {
 }
 
 // ================================================================
-// 22. СОХРАНЕНИЕ СТАВКИ (ОСНОВНОЕ)
+// 24. СОХРАНЕНИЕ СТАВКИ (ОСНОВНОЕ)
 // ================================================================
 
 function saveBet() {
@@ -5789,7 +6849,7 @@ function saveBet() {
 }
 
 // ================================================================
-// 23. СТАТИСТИКА (РАСШИРЕННАЯ)
+// 25. СТАТИСТИКА (РАСШИРЕННАЯ)
 // ================================================================
 
 function renderStats() {
@@ -5811,13 +6871,11 @@ function renderDashboard() {
     const roiEl = document.getElementById('kpiROIDisplay');
     if (roiEl) roiEl.textContent = roi.toFixed(1) + '%';
 
-    // Точность AI
     const aiAcc = state.bets.length > 0 ? 
         Math.min(85, Math.round((wins / Math.max(1, finished)) * 100)) : 0;
     const aiDisplayEl = document.getElementById('kpiAIDisplay');
     if (aiDisplayEl) aiDisplayEl.textContent = aiAcc + '%';
 
-    // Прибыль
     const profit = wins - losses;
     const profitEl = document.getElementById('kpiProfitDisplay');
     if (profitEl) profitEl.textContent = profit > 0 ? '+' + profit : profit;
@@ -5825,13 +6883,11 @@ function renderDashboard() {
     const profitTrendEl = document.getElementById('kpiProfitTrend');
     if (profitTrendEl) profitTrendEl.textContent = `📊 Ставок: ${total}`;
 
-    // Value ставки
     const valueCount = state.valueBets ? state.valueBets.length : 0;
     const valueRate = total > 0 ? Math.round((valueCount / total) * 100) : 0;
     const valueEl = document.getElementById('kpiValueDisplay');
     if (valueEl) valueEl.textContent = valueRate + '%';
 
-    // Обновляем счетчик экспорта
     const exportCount = document.getElementById('exportCount');
     if (exportCount) exportCount.textContent = total;
 
@@ -5886,7 +6942,7 @@ function renderValueBetsList() {
 }
 
 // ================================================================
-// 24. ГРАФИК БАЛАНСА
+// 26. ГРАФИК БАЛАНСА
 // ================================================================
 
 function renderChartCanvas() {
@@ -5979,7 +7035,7 @@ function setChartRange(range) {
 }
 
 // ================================================================
-// 25. ИНСАЙТЫ (РАСШИРЕННЫЕ)
+// 27. ИНСАЙТЫ (РАСШИРЕННЫЕ)
 // ================================================================
 
 function renderInsights() {
@@ -6007,7 +7063,6 @@ function renderInsights() {
     const recentRate = latest10.length > 0 ?
         Math.round((latest10.filter(b => b.outcome === 'win').length / latest10.length) * 100) : 0;
 
-    // Статистика по типам ставок
     const typeStats = {};
     ['total', 'oz', 'fora'].forEach(type => {
         const bets = state.bets.filter(b => b.type === type && b.outcome !== 'pending');
@@ -6029,7 +7084,6 @@ function renderInsights() {
         }
     });
 
-    // Статистика по рискам
     const riskStats = { low: 0, medium: 0, high: 0 };
     state.bets.filter(b => b.outcome !== 'pending').forEach(b => {
         if (b.risk === 'low') riskStats.low++;
@@ -6071,7 +7125,7 @@ function renderInsights() {
 }
 
 // ================================================================
-// 26. ИСТОРИЯ СТАВОК (РАСШИРЕННАЯ)
+// 28. ИСТОРИЯ СТАВОК (РАСШИРЕННАЯ)
 // ================================================================
 
 function renderBetHistory() {
@@ -6244,7 +7298,7 @@ function editBet(idx) {
 }
 
 // ================================================================
-// 27. ЭКСПОРТ ДАННЫХ (РАСШИРЕННЫЙ)
+// 29. ЭКСПОРТ ДАННЫХ (РАСШИРЕННЫЙ)
 // ================================================================
 
 function exportToExcel() {
@@ -6285,7 +7339,6 @@ function exportToExcel() {
 
         XLSX.utils.book_append_sheet(wb, ws, 'Ставки');
 
-        // Статистика
         const statsData = [
             ['📊 СТАТИСТИКА'],
             ['Параметр', 'Значение'],
@@ -6449,7 +7502,7 @@ function importData(event) {
 }
 
 // ================================================================
-// 28. AI МОДЕЛЬ
+// 30. AI МОДЕЛЬ
 // ================================================================
 
 const ultimateAI = {
@@ -6569,7 +7622,7 @@ function addAILog(msg) {
 }
 
 // ================================================================
-// 29. НАВИГАЦИЯ
+// 31. НАВИГАЦИЯ
 // ================================================================
 
 function switchTab(tab) {
@@ -6704,7 +7757,7 @@ function renderAllLeagues() {
 }
 
 // ================================================================
-// 30. ТЕМА
+// 32. ТЕМА
 // ================================================================
 
 function toggleTheme() {
@@ -6736,7 +7789,7 @@ function initTheme() {
 }
 
 // ================================================================
-// 31. ОБНОВЛЕНИЕ ПРОГНОЗОВ
+// 33. ОБНОВЛЕНИЕ ПРОГНОЗОВ
 // ================================================================
 
 async function refreshPredictions() {
@@ -6768,7 +7821,7 @@ async function refreshPredictions() {
 }
 
 // ================================================================
-// 32. СБРОС И ОЧИСТКА
+// 34. СБРОС И ОЧИСТКА
 // ================================================================
 
 function resetAll() {
@@ -6877,7 +7930,7 @@ function manualCheck() {
 }
 
 // ================================================================
-// 33. ИСТОРИЯ НА ГЛАВНОМ ЭКРАНЕ
+// 35. ИСТОРИЯ НА ГЛАВНОМ ЭКРАНЕ
 // ================================================================
 
 function renderHistory() {
@@ -6937,7 +7990,7 @@ function renderHistory() {
 }
 
 // ================================================================
-// 34. МОДАЛЬНОЕ ОКНО
+// 36. МОДАЛЬНОЕ ОКНО
 // ================================================================
 
 function closeSaveModal() {
@@ -6981,7 +8034,7 @@ function confirmSaveBet() {
 }
 
 // ================================================================
-// 35. PWA УСТАНОВКА
+// 37. PWA УСТАНОВКА
 // ================================================================
 
 let deferredPrompt = null;
@@ -7024,7 +8077,7 @@ window.addEventListener('appinstalled', (evt) => {
 });
 
 // ================================================================
-// 36. ИНИЦИАЛИЗАЦИЯ
+// 38. ИНИЦИАЛИЗАЦИЯ
 // ================================================================
 
 async function initApp() {
@@ -7043,7 +8096,6 @@ async function initApp() {
         if (apiInput) apiInput.value = state.apiKey;
         if (weatherInput) weatherInput.value = state.weatherKey;
 
-        // Загружаем матчи
         try {
             const matches = await generatePredictions();
             state.predictions = matches;
@@ -7055,7 +8107,6 @@ async function initApp() {
             showToast('⚠️ Используются тестовые матчи', 'warn');
         }
 
-        // Рендерим всё
         renderBetHistory();
         renderHistory();
         renderStats();
@@ -7066,7 +8117,6 @@ async function initApp() {
         updateAIStatus();
         updateSum();
 
-        // Загружаем погоду
         try {
             await loadHeaderWeather();
         } catch (error) {
@@ -7100,7 +8150,7 @@ async function initApp() {
 }
 
 // ================================================================
-// 37. ЗАПУСК ПРИЛОЖЕНИЯ
+// 39. ЗАПУСК ПРИЛОЖЕНИЯ
 // ================================================================
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -7116,7 +8166,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 300);
 });
 
-// Глобальные обработчики ошибок
 window.onerror = function(msg, url, line, col, error) {
     console.error('❌ Глобальная ошибка:', msg);
     showToast('⚠️ Произошла ошибка, проверьте консоль', 'error');
@@ -7133,12 +8182,10 @@ window.addEventListener('resize', () => {
     if (state.currentTab === 'stats') renderChartCanvas();
 });
 
-console.log('✅ КВАНТУМ v8.0 - ПОЛНАЯ РАСШИРЕННАЯ ВЕРСИЯ ЗАГРУЖЕНА!');
-console.log('🚀 Приложение готово к работе!');
-console.log('📊 Всего строк: ~8500+');
-console.log('⚛️ 41 лига, 60+ дерби, 250+ стадионов');
-        console.log('⚛️ Квантум v8.0 - Расширенная версия - Часть 1 загружена!');
+        console.log('⚛️ Квантум v8.0 - Часть 1 загружена!');
+        console.log('✅ Навигация исправлена - приклеена снизу!');
         console.log('📦 Ожидайте Часть 2 (Данные + API + Погода)...');
     </script>
+
 </body>
 </html>
